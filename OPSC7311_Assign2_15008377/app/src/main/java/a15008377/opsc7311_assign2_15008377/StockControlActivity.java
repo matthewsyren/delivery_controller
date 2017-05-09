@@ -1,5 +1,6 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,12 +23,13 @@ public class StockControlActivity extends BaseActivity {
 
         //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
         super.onCreateDrawer();
-        super.setSelectedNavItem(R.id.nav_home);
+        super.setSelectedNavItem(R.id.nav_stock_control);
     }
 
     //Method calls the AddStockActivity
     public void addStockOnClick(View view){
-
+        Intent intent = new Intent(StockControlActivity.this, AddStockActivity.class);
+        startActivity(intent);
     }
 
     //Method calls the UpdateStockActivity

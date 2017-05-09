@@ -9,8 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 /**
  * Created by matthew on 2017/02/04.
@@ -26,6 +28,12 @@ public class BaseActivity extends Activity
     protected void onCreateDrawer() {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    //Method opens the NavigationDrawer when the menu button is clicked
+    public void toggleDrawer(View view){
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     //Method sets the selected item in the Navigation Drawer
@@ -71,10 +79,15 @@ public class BaseActivity extends Activity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.nav_stock_control){
+        //Opens the appropriate Activity based on the menu item clicked in the Navigation Drawer
+        if(id == R.id.nav_home){
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        }
+        else if(id == R.id.nav_stock_control){
             startActivity(new Intent(getApplicationContext(), StockControlActivity.class));
         }
 
+        //Closes the NavigationDrawer once the action has been completed
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
