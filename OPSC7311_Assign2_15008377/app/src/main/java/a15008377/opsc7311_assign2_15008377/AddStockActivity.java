@@ -21,7 +21,7 @@ public class AddStockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_stock);
     }
 
-    public void addStock(View view) {
+    public void addStockOnClick(View view) {
         try{
             EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
             EditText txtStockDescription = (EditText) findViewById(R.id.text_stock_description);
@@ -32,8 +32,8 @@ public class AddStockActivity extends AppCompatActivity {
             int stockQuantity = Integer.parseInt(txtStockQuantity.getText().toString());
 
             Stock stock = new Stock(stockID, stockDescription, stockQuantity);
-            if(stock.validateStock(this)){
-                writeToFile(stockID, stockDescription, stockQuantity);
+            if(stock.validateStock(this) && !stock.checkStockID(this)){
+                writeToFile(stock.getStockID(), stock.getStockDescription(), stock.getStockQuantity());
             }
         }
         catch(NumberFormatException nfe){

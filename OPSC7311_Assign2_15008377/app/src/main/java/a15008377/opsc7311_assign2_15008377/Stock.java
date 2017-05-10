@@ -4,16 +4,19 @@ import android.content.Context;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Matthew Syrén on 2017/05/09.
  */
 
-public class Stock {
+public class Stock implements Serializable{
     //Declarations
     private String stockID;
     private String stockDescription;
@@ -59,49 +62,46 @@ public class Stock {
         else if(stockQuantity < 0){
             displayMessage("Please enter a Stock Quantity that is more than or equal to 0", context);
         }
-        else if(checkStockID(context)){
-            displayMessage(stockID + " has already been taken by another stock item, please choose another Stock ID", context);
-        }
         else{
             validStock = true;
-            displayMessage("Stock is valid", context);
         }
         return validStock;
     }
 
     //Method checks if the entered Stock ID has already been taken. The method returns true if it has been taken, and false if it hasn't been taken
-    public boolean checkStockID(Context context) throws IOException{
+    public boolean checkStockID(Context context) throws IOException {
         boolean stockIDTaken = false;
-        String line;
-        FileInputStream fileInputStream = context.openFileInput("Stock.txt");
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 
-        while((line = bufferedReader.readLine()) != null && !stockIDTaken){
-            String[] part = line.split("\\|");
-            if(part[0].equals(stockID)){
+        ArrayList<Stock> lstStock = readStockItems(context);
+        for(int i = 0; i < lstStock.size() && !stockIDTaken; i++){
+            if(lstStock.get(i).getStockID().equals(stockID)){
                 stockIDTaken = true;
+                displayMessage(stockID + " has already been taken by another stock item, please choose another Stock ID", context);
             }
         }
 
         return stockIDTaken;
     }
 
-    public String readStockItems(Context context) throws IOException{
+    public static ArrayList<Stock> readStockItems(Context context) throws IOException {
         BufferedReader bufferedReader = null;
-        String textFileContent = "";
         String line;
+        ArrayList<Stock> lstStock = new ArrayList<Stock>();
+        File file = new File(context.getFilesDir(), "Stock.txt");
 
-        FileInputStream fileInputStream = context.openFileInput("Stock.txt");
+        FileInputStream fileInputStream = context.openFileInput(file.getName());
         bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 
         while((line = bufferedReader.readLine()) != null){
-            textFileContent += line + "\n";
+            String[] part = line.split("\\|");
+            Stock stock = new Stock(part[0], part[1], Integer.parseInt(part[2]));
+            lstStock.add(stock);
         }
-        return textFileContent;
+        return lstStock;
     }
 
     //Method displays a Toast message with the message that is passed in as a parameter
-    private void displayMessage(String message, Context context){
+    private void displayMessage(String message, Context context) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }

@@ -20,17 +20,9 @@
         android:text="@string/button_add_stock"
         android:onClick="addStockOnClick"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_update_stock"
-        android:layout_below="@+id/button_add_stock"
-        android:text="@string/button_update_stock"
-        android:onClick="updateStockOnClick"/>
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_available_stock"
-        android:layout_below="@+id/button_update_stock"/>
+        android:layout_below="@+id/button_add_stock"/>
 </RelativeLayout>
