@@ -22,4 +22,12 @@
     <string name="label_stock_id">Stock ID:</string>
     <string name="label_stock_description">Stock Description</string>
     <string name="label_stock_quantity">Stock Quantity</string>
+
+    <!-- StockControlActivity -->
+    <string name="button_add_client">Add Client</string>
+
+    <!-- AddClientActivity -->
+    <string name="label_client_name">Client Name</string>
+    <string name="label_client_email">Client Email Address</string>
+    <string name="label_client_address">Client Address</string>
 </resources>

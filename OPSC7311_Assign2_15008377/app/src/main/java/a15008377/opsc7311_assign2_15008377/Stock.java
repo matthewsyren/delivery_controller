@@ -29,7 +29,7 @@ public class Stock implements Serializable{
         this.stockQuantity = stockQuantity;
     }
 
-    //Accessor methods
+    //Getter methods
     public String getStockID() {
         return stockID;
     }
@@ -43,7 +43,7 @@ public class Stock implements Serializable{
     }
 
     //Method returns true if the Stock object has valid values for all of its attributes, otherwise it returns false
-    public boolean validateStock(Context context) throws IOException{
+    public boolean validateStock(Context context){
         boolean validStock = false;
 
         //If statements check numerous validation criteria for the Stock object.

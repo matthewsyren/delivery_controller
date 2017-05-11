@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="a15008377.opsc7311_assign2_15008377">
+
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,7 +25,9 @@
             android:label="@string/title_activity_stock_control"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddStockActivity" />
-        <activity android:name=".UpdateStockActivity"></activity>
+        <activity android:name=".UpdateStockActivity" />
+        <activity android:name=".ClientControlActivity" />
+        <activity android:name=".AddClientActivity"></activity>
     </application>
 
 </manifest>
