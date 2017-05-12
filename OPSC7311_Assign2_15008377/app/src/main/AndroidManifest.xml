@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,8 +27,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddStockActivity" />
         <activity android:name=".UpdateStockActivity" />
-        <activity android:name=".ClientControlActivity" />
-        <activity android:name=".AddClientActivity"></activity>
+        <activity android:name=".AddClientActivity" />
+        <activity
+            android:name=".ClientControlActivity"
+            android:label="@string/title_activity_client_control"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

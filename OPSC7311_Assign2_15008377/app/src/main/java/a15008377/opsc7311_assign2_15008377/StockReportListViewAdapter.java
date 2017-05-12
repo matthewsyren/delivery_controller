@@ -27,7 +27,6 @@ public class StockReportListViewAdapter extends ArrayAdapter {
     TextView stockID;
     TextView stockDescription;
     TextView latestQuantity;
-    ListView stockListView;
     ArrayList<Stock> lstStock;
 
     //Constructor
@@ -50,12 +49,11 @@ public class StockReportListViewAdapter extends ArrayAdapter {
         stockID = (TextView) convertView.findViewById(R.id.text_stock_id);
         stockDescription = (TextView) convertView.findViewById(R.id.text_stock_description);
         latestQuantity = (TextView) convertView.findViewById(R.id.text_stock_quantity);
-        stockListView = (ListView) convertView.findViewById(R.id.list_view_available_stock);
 
         //Displays the data in the appropriate Views
         stockID.setText("ID: " + lstStock.get(position).getStockID());
         stockDescription.setText("Description: " + lstStock.get(position).getStockDescription());
-        latestQuantity.setText("Qantity: " + lstStock.get(position).getStockQuantity());
+        latestQuantity.setText("Quantity: " + lstStock.get(position).getStockQuantity());
         return convertView;
     }
 }

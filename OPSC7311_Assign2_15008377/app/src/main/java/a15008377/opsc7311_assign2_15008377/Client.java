@@ -3,11 +3,13 @@ package a15008377.opsc7311_assign2_15008377;
 import android.content.Context;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 /**
  * Created by Matthew Syrén on 2017/05/11.
  */
 
-public class Client {
+public class Client implements Serializable{
     //Declarations
     private String clientName;
     private String clientEmail;

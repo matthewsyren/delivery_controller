@@ -1,5 +1,7 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class AddClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
-
+    Client client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class AddClientActivity extends AppCompatActivity implements IAPIConnecti
         String clientName = txtClientName.getText().toString();
         String clientEmail = txtClientEmail.getText().toString();
         String clientAddress = txtClientAddress.getText().toString();
-        Client client = new Client(clientName, clientEmail, clientAddress);
+        client = new Client(clientName, clientEmail, clientAddress);
 
         //Calls the Google Maps API to determine whether the user has entered a valid address
         if(client.validateClient(this)){
@@ -42,18 +44,28 @@ public class AddClientActivity extends AppCompatActivity implements IAPIConnecti
         try{
             if(response != null) {
                 JSONObject jsonObject = new JSONObject(response);
+
+                //Writes the client's information to the database if the address returns valid coordinates
                 if(jsonObject.getString("status").equals("OK")){
                     JSONArray jsonArray = jsonObject.getJSONArray("results");
                     JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-                    Toast.makeText(this, location.getString("lat") + " " + location.getString("lng"), Toast.LENGTH_LONG).show();
+
+                    client.setClientLatitude(location.getDouble("lat"));
+                    client.setClientLongitude(location.getDouble("lng"));
+
+                    DBAdapter dbAdapter = new DBAdapter(this);
+                    dbAdapter.open();
+                    if(dbAdapter.insertClient(client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude()) >= 0){
+                        Toast.makeText(this, "Client successfully added", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Google Maps was unable to locate the address you typed in, please ensure that the address you have typed in is correct", Toast.LENGTH_LONG).show();
                 }
             }
         }
-        catch(Exception jse){
-            Toast.makeText(getApplicationContext(), jse.getMessage(), Toast.LENGTH_LONG).show();
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

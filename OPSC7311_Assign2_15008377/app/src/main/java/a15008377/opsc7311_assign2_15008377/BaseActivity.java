@@ -87,7 +87,7 @@ public class BaseActivity extends Activity
             startActivity(new Intent(getApplicationContext(), StockControlActivity.class));
         }
         else if(id == R.id.nav_client_control){
-            startActivity(new Intent(getApplicationContext(), AddClientActivity.class));
+            startActivity(new Intent(getApplicationContext(), ClientControlActivity.class));
         }
 
         //Closes the NavigationDrawer once the action has been completed

@@ -30,4 +30,5 @@
     <string name="label_client_name">Client Name</string>
     <string name="label_client_email">Client Email Address</string>
     <string name="label_client_address">Client Address</string>
+    <string name="title_activity_client_control">ClientControlActivity</string>
 </resources>
