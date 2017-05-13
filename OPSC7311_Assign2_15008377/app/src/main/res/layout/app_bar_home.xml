@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="a15008377.opsc7311_assign2_15008377.BaseActivity">
+    tools:context="a15008377.opsc7311_assign2_15008377.HomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -29,8 +29,6 @@
                 android:background="?android:attr/selectableItemBackground"/>
 
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_home"/>
 </android.support.design.widget.CoordinatorLayout>

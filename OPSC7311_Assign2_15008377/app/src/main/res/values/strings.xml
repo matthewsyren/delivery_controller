@@ -38,4 +38,15 @@
     <string name="title_activity_client_control">ClientControlActivity</string>
     <string name="title_activity_delivery_control">DeliveryControlActivity</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <!-- DeliveryControlActivity -->
+    <string name="button_add_delivery">Add Delivery</string>
+    <string name="button_update_delivery">Update Delivery</string>
+    <string name="button_delete_delivery">Delete Delivery</string>
+    <string name="text_delivery_report_heading">Upcoming Deliveries</string>
+
+    <!-- AddDeliveryActivity -->
+    <string name="label_delivery_id">Delivery ID</string>
+    <string name="label_delivery_date">Delivery Date</string>
+    <string name="labeldelivery_client">Delivery Client</string>
 </resources>

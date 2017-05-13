@@ -25,11 +25,8 @@
                 android:src="@drawable/ic_menu"
                 android:background="?android:attr/selectableItemBackground"
                 android:id="@+id/button_menu" />
+
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_delivery_control" />
-
-
 </android.support.design.widget.CoordinatorLayout>

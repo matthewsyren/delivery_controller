@@ -1,5 +1,7 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +32,24 @@ public class DeliveryControlActivity extends BaseActivity {
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_delivery_control);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner_stock);
-        ArrayAdapter<String> adapter;
-        List<String> list;
+        DBAdapter dbAdapter = new DBAdapter(this);
+        dbAdapter.open();
+        Cursor cursor = dbAdapter.getAllDeliveries();
+        if(cursor.moveToFirst()){
+            do{
+                Toast.makeText(this, "ID: " + cursor.getString(0) + "\nClient: " + cursor.getString(1) + "\nDate: " +cursor.getString(2) + "\nCompleted: " + cursor.getInt(3), Toast.LENGTH_LONG).show();
+            }while(cursor.moveToNext());
+        }
+    }
 
-        list = new ArrayList<String>();
-        list.add("Item 1");
-        list.add("Item 2");
-        list.add("Item 3");
-        list.add("Item 4");
-        list.add("Item 5");
-        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    //Method takes the user to the AddDeliveryActivity
+    public void addDeliveryOnClick(View view){
+        try{
+            Intent intent = new Intent(DeliveryControlActivity.this, AddDeliveryActivity.class);
+            startActivity(intent);
+        }
+        catch(Exception exc){
+
+        }
     }
 }
