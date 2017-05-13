@@ -31,6 +31,15 @@
         <activity
             android:name=".ClientControlActivity"
             android:label="@string/title_activity_client_control"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UpdateClientActivity" />
+        <activity
+            android:name=".DeliveryControlActivity"
+            android:label="@string/title_activity_delivery_control"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

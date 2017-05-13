@@ -13,16 +13,26 @@
     tools:context="a15008377.opsc7311_assign2_15008377.StockControlActivity"
     tools:showIn="@layout/app_bar_stock_control">
 
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button_add_stock"
-        android:text="@string/button_add_stock"
-        android:onClick="addStockOnClick"/>
+        android:id="@+id/text_stock_report_heading"
+        android:text="@string/text_stock_report_heading"
+        style="@style/HeadingTextStyle"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_available_stock"
-        android:layout_below="@+id/button_add_stock"/>
+        android:layout_below="@id/text_stock_report_heading"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add"
+        android:onClick="addStockOnClick"/>
 </RelativeLayout>

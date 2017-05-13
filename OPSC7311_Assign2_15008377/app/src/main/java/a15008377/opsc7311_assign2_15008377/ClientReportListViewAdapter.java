@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class ClientReportListViewAdapter extends ArrayAdapter{
     //Declarations
     private Context context;
+    private TextView clientID;
     private TextView clientName;
     private TextView clientEmail;
     private TextView clientAddress;
@@ -40,11 +43,13 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
         convertView = inflater.inflate(R.layout.list_view_row_client_report, parent, false);
 
         //Component assignments
+        clientID = (TextView) convertView.findViewById(R.id.text_client_id);
         clientName = (TextView) convertView.findViewById(R.id.text_client_name);
         clientEmail = (TextView) convertView.findViewById(R.id.text_client_email);
         clientAddress = (TextView) convertView.findViewById(R.id.text_client_address);
 
         //Displays the data in the appropriate Views
+        clientID.setText("ID: " + lstClients.get(position).getClientID());
         clientName.setText("Name: " + lstClients.get(position).getClientName());
         clientEmail.setText("Email: " + lstClients.get(position).getClientEmail());
         clientAddress.setText("Address: " + lstClients.get(position).getClientAddress());

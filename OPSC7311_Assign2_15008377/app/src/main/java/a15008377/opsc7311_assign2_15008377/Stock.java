@@ -72,6 +72,11 @@ public class Stock implements Serializable{
     public boolean checkStockID(Context context) throws IOException {
         boolean stockIDTaken = false;
 
+        File file = new File(context.getFilesDir(), "Stock.txt");
+        if(!file.exists()){
+            file.createNewFile();
+        }
+
         ArrayList<Stock> lstStock = readStockItems(context);
         for(int i = 0; i < lstStock.size() && !stockIDTaken; i++){
             if(lstStock.get(i).getStockID().equals(stockID)){

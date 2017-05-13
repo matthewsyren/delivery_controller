@@ -17,18 +17,25 @@
     <string name="button_add_stock">Add Stock</string>
     <string name="button_update_stock">Update Stock</string>
     <string name="button_delete_stock">Delete Stock</string>
+    <string name="text_stock_report_heading">Available Stock</string>
 
     <!-- AddStockActivity -->
     <string name="label_stock_id">Stock ID:</string>
     <string name="label_stock_description">Stock Description</string>
     <string name="label_stock_quantity">Stock Quantity</string>
 
-    <!-- StockControlActivity -->
+    <!-- ClientControlActivity -->
     <string name="button_add_client">Add Client</string>
+    <string name="button_update_client">Update Client</string>
+    <string name="button_delete_client">Delete Client</string>
+    <string name="text_client_report_heading">Current Clients</string>
 
     <!-- AddClientActivity -->
+    <string name="label_client_id">Client ID</string>
     <string name="label_client_name">Client Name</string>
     <string name="label_client_email">Client Email Address</string>
     <string name="label_client_address">Client Address</string>
     <string name="title_activity_client_control">ClientControlActivity</string>
+    <string name="title_activity_delivery_control">DeliveryControlActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

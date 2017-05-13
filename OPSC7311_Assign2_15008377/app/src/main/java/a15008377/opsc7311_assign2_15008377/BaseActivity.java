@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 /**
  * Created by matthew on 2017/02/04.
@@ -28,6 +29,14 @@ public class BaseActivity extends Activity
     protected void onCreateDrawer() {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageButton btnMenu = (ImageButton) findViewById(R.id.button_menu);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleDrawer(v);
+            }
+        });
     }
 
     //Method opens the NavigationDrawer when the menu button is clicked
@@ -88,6 +97,9 @@ public class BaseActivity extends Activity
         }
         else if(id == R.id.nav_client_control){
             startActivity(new Intent(getApplicationContext(), ClientControlActivity.class));
+        }
+        else if(id == R.id.nav_delivery_control){
+            startActivity(new Intent(getApplicationContext(), DeliveryControlActivity.class));
         }
 
         //Closes the NavigationDrawer once the action has been completed

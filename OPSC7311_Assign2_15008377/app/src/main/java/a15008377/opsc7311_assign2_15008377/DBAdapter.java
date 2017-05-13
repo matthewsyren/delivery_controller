@@ -21,13 +21,14 @@ public class DBAdapter {
 
     //Client Table Declarations
     static final String KEY_ROWID = "_id";
+    static final String KEY_CLIENT_ID = "client_id";
     static final String KEY_CLIENT_NAME = "client_name";
     static final String KEY_CLIENT_EMAIL = "client_email";
     static final String KEY_CLIENT_ADDRESS = "client_address";
     static final String KEY_CLIENT_LATITUDE = "client_latitude";
     static final String KEY_CLIENT_LONGITUDE = "client_longitude";
     static final String DATABASE_CLIENT_TABLE = "clients";
-    static final String DATABASE_CLiENT_CREATE = "create table clients (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_CLIENT_NAME + " text not null, " + KEY_CLIENT_EMAIL + " text not null, " + KEY_CLIENT_ADDRESS + " text not null, " + KEY_CLIENT_LATITUDE + " decimal(9, 6) not null, " + KEY_CLIENT_LONGITUDE + " decimal(9,6) not null);";
+    static final String DATABASE_CLiENT_CREATE = "create table clients (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_CLIENT_ID + " text unique not null, " + KEY_CLIENT_NAME + " text not null, " + KEY_CLIENT_EMAIL + " text not null, " + KEY_CLIENT_ADDRESS + " text not null, " + KEY_CLIENT_LATITUDE + " decimal(9, 6) not null, " + KEY_CLIENT_LONGITUDE + " decimal(9,6) not null);";
 
     //Other Declarations
     final Context context;
@@ -67,6 +68,7 @@ public class DBAdapter {
                 e.printStackTrace();
             }
         }
+
         //Method updates the version of the database
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
@@ -78,8 +80,9 @@ public class DBAdapter {
     }
 
     //Method inserts a record to the appropriate table
-    public long insertClient(String clientName, String clientEmail, String clientAddress, double clientLatitude, double clientLongitude) {
+    public long insertClient(String clientID, String clientName, String clientEmail, String clientAddress, double clientLatitude, double clientLongitude) {
         ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_CLIENT_ID, clientID);
         contentValues.put(KEY_CLIENT_NAME, clientName);
         contentValues.put(KEY_CLIENT_EMAIL, clientEmail);
         contentValues.put(KEY_CLIENT_ADDRESS, clientAddress);
@@ -89,27 +92,35 @@ public class DBAdapter {
         return sqLiteDatabase.insert(DATABASE_CLIENT_TABLE, null, contentValues);
     }
 
-    //<ethod deletes a record from the appropriate table
-    public boolean deleteRecord(long rowId, String tableName) {
-        return sqLiteDatabase.delete(tableName, KEY_ROWID + "=" + rowId, null) > 0;
+    //Method deletes a record from the appropriate table
+    public boolean deleteClient(String clientID) {
+        return sqLiteDatabase.delete(DATABASE_CLIENT_TABLE, KEY_CLIENT_ID + "='" + clientID + "'", null) > 0;
     }
 
     //Method retrieves all records from the appropriate table
     public Cursor getAllClients() {
-        return sqLiteDatabase.query(DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, null, null, null, null, null);
+        return sqLiteDatabase.query(DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_ID, KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, null, null, null, null, null);
     }
 
     //Method retrieves a specific record from the appropriate database
-    public Cursor getRecord(long rowId, String tableName, String[] columns) throws SQLException {
-        Cursor cursor = sqLiteDatabase.query(true, tableName, columns, KEY_ROWID + "=" + rowId, null, null, null, null, null);
-        if (cursor != null) {
+    public Cursor getClient(String clientID) throws SQLException {
+        Cursor cursor = sqLiteDatabase.query(true, DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, KEY_CLIENT_ID + "='" + clientID + "'", null, null, null, null, null);
+        /*if (cursor != null) {
             cursor.moveToFirst();
-        }
+        } */
         return cursor;
     }
 
     //Method updates a specific record in the appropriate table
-    public boolean updateRecord(long rowId, ContentValues contentValues, String tableName) {
-        return sqLiteDatabase.update(tableName, contentValues, KEY_ROWID + "=" + rowId, null) > 0;
+    public boolean updateClient(String clientID, String clientName, String clientEmail, String clientAddress, double clientLatitude, double clientLongitude) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_CLIENT_ID, clientID);
+        contentValues.put(KEY_CLIENT_NAME, clientName);
+        contentValues.put(KEY_CLIENT_EMAIL, clientEmail);
+        contentValues.put(KEY_CLIENT_ADDRESS, clientAddress);
+        contentValues.put(KEY_CLIENT_LATITUDE, clientLatitude);
+        contentValues.put(KEY_CLIENT_LONGITUDE, clientLongitude);
+
+        return sqLiteDatabase.update(DATABASE_CLIENT_TABLE, contentValues, KEY_CLIENT_ID + "='" + clientID + "'", null) > 0;
     }
 }

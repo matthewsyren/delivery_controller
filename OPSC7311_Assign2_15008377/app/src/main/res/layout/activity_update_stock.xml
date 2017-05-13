@@ -62,7 +62,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/button_update_stock"
     android:layout_below="@+id/text_stock_quantity"
-    android:text="@string/button_update_stock"
+    android:text="@string/button_update_client"
     style="@style/TextStyle"
     android:onClick="updateStockOnClick"/>
 
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/button_delete_stock"
         android:layout_below="@+id/button_update_stock"
-        android:text="@string/button_delete_stock"
+        android:text="@string/button_delete_client"
         style="@style/TextStyle"
         android:onClick="deleteStockOnClick"/>
 </RelativeLayout>

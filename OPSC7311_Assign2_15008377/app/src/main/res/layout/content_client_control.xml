@@ -12,16 +12,26 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="a15008377.opsc7311_assign2_15008377.ClientControlActivity"
     tools:showIn="@layout/app_bar_client_control">
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button_add_client"
-        android:text="@string/button_add_client"
-        android:onClick="addClientOnClick"/>
+        android:id="@+id/text_client_report_heading"
+        android:text="@string/text_client_report_heading"
+        style="@style/HeadingTextStyle"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_clients"
-        android:layout_below="@+id/button_add_client"/>
+        android:layout_below="@+id/text_client_report_heading"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add"
+        android:onClick="addClientOnClick"/>
 </RelativeLayout>

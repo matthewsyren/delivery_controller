@@ -11,6 +11,8 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class AddClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
     Client client;
     @Override
@@ -21,46 +23,45 @@ public class AddClientActivity extends AppCompatActivity implements IAPIConnecti
 
     //Method stores the entered data for the client in the database
     public void addClientOnClick(View view) {
-        EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
-        EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
-        EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
+        try{
+            EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
+            EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
+            EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
+            EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
 
-        String clientName = txtClientName.getText().toString();
-        String clientEmail = txtClientEmail.getText().toString();
-        String clientAddress = txtClientAddress.getText().toString();
-        client = new Client(clientName, clientEmail, clientAddress);
+            String clientID = txtClientID.getText().toString();
+            String clientName = txtClientName.getText().toString();
+            String clientEmail = txtClientEmail.getText().toString();
+            String clientAddress = txtClientAddress.getText().toString();
+            client = new Client(clientID, clientName, clientEmail, clientAddress);
 
-        //Calls the Google Maps API to determine whether the user has entered a valid address
-        if(client.validateClient(this)){
-            APIConnection api = new APIConnection();
-            api.delegate = this;
-            api.execute("http://maps.google.com/maps/api/geocode/json?address=" + client.getClientAddress());
+            //Calls the Google Maps API to determine whether the user has entered a valid address
+            if(client.validateClient(this) && !client.checkClientID(this)){
+                APIConnection api = new APIConnection();
+                api.delegate = this;
+                api.execute("http://maps.google.com/maps/api/geocode/json?address=" + client.getClientAddress());
+            }
+        }
+        catch (IOException ioe){
+
         }
     }
 
-    //Method reads the data returned from the Google Maps API and determines whether the user has entered a valid address
+    //Method reads the data returned from the Google Maps API (the coordinates if the address entered by the user) and determines whether the user has entered a valid address
     @Override
     public void getJsonResponse(String response) {
         try{
-            if(response != null) {
-                JSONObject jsonObject = new JSONObject(response);
+            JSONObject location = Client.getAddressCoordinates(response, this);
+            if(location != null){
+                client.setClientLatitude(location.getDouble("lat"));
+                client.setClientLongitude(location.getDouble("lng"));
 
-                //Writes the client's information to the database if the address returns valid coordinates
-                if(jsonObject.getString("status").equals("OK")){
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                Toast.makeText(this, "Lat: " + client.getClientLatitude() + "\nLon: " + client.getClientLongitude(), Toast.LENGTH_LONG).show();
 
-                    client.setClientLatitude(location.getDouble("lat"));
-                    client.setClientLongitude(location.getDouble("lng"));
-
-                    DBAdapter dbAdapter = new DBAdapter(this);
-                    dbAdapter.open();
-                    if(dbAdapter.insertClient(client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude()) >= 0){
-                        Toast.makeText(this, "Client successfully added", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Google Maps was unable to locate the address you typed in, please ensure that the address you have typed in is correct", Toast.LENGTH_LONG).show();
+                DBAdapter dbAdapter = new DBAdapter(this);
+                dbAdapter.open();
+                if(dbAdapter.insertClient(client.getClientID(), client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude()) >= 0){
+                    Toast.makeText(getApplicationContext(), "Client successfully added", Toast.LENGTH_LONG).show();
                 }
             }
         }

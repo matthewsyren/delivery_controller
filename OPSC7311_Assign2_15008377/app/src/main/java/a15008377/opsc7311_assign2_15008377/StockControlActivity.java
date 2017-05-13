@@ -36,14 +36,19 @@ public class StockControlActivity extends BaseActivity {
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_stock_control);
 
-        //Sets the custom adapter for the ListView to display the Show data
+        displayStock();
+    }
+
+    //Method populates the list_view_available_stock ListView
+    public void displayStock(){
         try{
+            //Sets the custom adapter for the ListView to display the Stock data
             final ArrayList<Stock> lstStock = Stock.readStockItems(this);
             StockReportListViewAdapter adapter = new StockReportListViewAdapter(this, lstStock);
             ListView listView = (ListView) findViewById(R.id.list_view_available_stock);
             listView.setAdapter(adapter);
 
-            //Sets an OnItemClickListener on the ListView, which will take the user to the SpecificShowActivity, where the user will be shown more information on the show that they clicked on
+            //Sets an OnItemClickListener on the ListView, which will take the user to the UpdateStockActivity, where the user will be able to update the Stock's information
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
                     Intent intent = new Intent(StockControlActivity.this, UpdateStockActivity.class);
@@ -53,7 +58,7 @@ public class StockControlActivity extends BaseActivity {
             });
         }
         catch(IOException ioe){
-
+            Toast.makeText(getBaseContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -62,8 +67,4 @@ public class StockControlActivity extends BaseActivity {
         Intent intent = new Intent(StockControlActivity.this, AddStockActivity.class);
         startActivity(intent);
     }
-
-
-
-
 }
