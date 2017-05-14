@@ -155,9 +155,17 @@ public class DBAdapter {
     //Method retrieves a specific record from the appropriate database
     public Cursor getClient(String clientID) throws SQLException {
         Cursor cursor = sqLiteDatabase.query(true, DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, KEY_CLIENT_ID + "='" + clientID + "'", null, null, null, null, null);
-        /*if (cursor != null) {
-            cursor.moveToFirst();
-        } */
+        return cursor;
+    }
+
+    //Method retrieves all records from the appropriate table
+    public Cursor getAllDeliveryItems() {
+        return sqLiteDatabase.query(DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, null, null, null, null, null);
+    }
+
+    //Method retrieves a specific record from the appropriate database
+    public Cursor getDeliveryItems(String deliveryID) throws SQLException {
+        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
         return cursor;
     }
 

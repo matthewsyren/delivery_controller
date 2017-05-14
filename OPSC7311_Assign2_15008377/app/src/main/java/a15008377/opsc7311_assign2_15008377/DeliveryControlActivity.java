@@ -15,9 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +36,26 @@ public class DeliveryControlActivity extends BaseActivity {
 
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.open();
-        Cursor cursor = dbAdapter.getAllDeliveries();
-        if(cursor.moveToFirst()){
+        Cursor deliveryCursor  = dbAdapter.getAllDeliveries();
+       ArrayList<Delivery> lstDeliveries = new ArrayList<>();
+        if(deliveryCursor.moveToFirst()){
             do{
-                //Toast.makeText(this, "ID: " + cursor.getString(0) + "\nClient: " + cursor.getString(1) + "\nDate: " +cursor.getString(2) + "\nCompleted: " + cursor.getInt(3), Toast.LENGTH_LONG).show();
-            }while(cursor.moveToNext());
+                Cursor deliveryItems = dbAdapter.getDeliveryItems(deliveryCursor.getString(0));
+                ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+                if(deliveryItems.moveToFirst()){
+                    do{
+                        DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
+                        lstDeliveryItems.add(deliveryItem);
+                    }while(deliveryItems.moveToNext());
+
+                    Delivery delivery = new Delivery(deliveryCursor.getString(0),deliveryCursor.getString(1), deliveryCursor.getString(2), deliveryCursor.getInt(3), lstDeliveryItems);
+                    lstDeliveries.add(delivery);
+                }
+            }while(deliveryCursor.moveToNext());
+
+            DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
+            ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
+            listView.setAdapter(adapter);
         }
     }
 
