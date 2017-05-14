@@ -45,6 +45,10 @@ public class Delivery {
         return deliveryComplete;
     }
 
+    public ArrayList<DeliveryItem> getLstDeliveryItems() {
+        return lstDeliveryItems;
+    }
+
     //Method ensures that the Client has valid values for all of its fields
     public boolean validateDelivery(Context context){
         boolean validStock = false;

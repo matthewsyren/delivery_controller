@@ -122,6 +122,21 @@ public class DBAdapter {
         return sqLiteDatabase.insert(DATABASE_DELIVERY_TABLE, null, contentValues);
     }
 
+    //Method inserts a record to the appropriate table
+    public int insertDeliveryItem(String deliveryID, ArrayList<DeliveryItem> lstDeliveryItems) {
+        int itemsInserted = 0;
+
+        for(int i = 0; i < lstDeliveryItems.size(); i++){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(KEY_DELIVERY_ID, deliveryID);
+            contentValues.put(KEY_DELIVERY_ITEM_ID, lstDeliveryItems.get(i).getDeliveryStockID());
+            contentValues.put(KEY_DELIVERY_ITEM_QUANTITY, lstDeliveryItems.get(i).getDeliveryItemQuantity());
+            itemsInserted += sqLiteDatabase.insert(DATABASE_DELIVERY_ITEM_TABLE, null, contentValues);
+        }
+
+        return itemsInserted;
+    }
+
     //Method deletes a record from the appropriate table
     public boolean deleteClient(String clientID) {
         return sqLiteDatabase.delete(DATABASE_CLIENT_TABLE, KEY_CLIENT_ID + "='" + clientID + "'", null) > 0;

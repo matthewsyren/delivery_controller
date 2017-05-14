@@ -23,4 +23,8 @@ public class DeliveryItem {
     public String getDeliveryStockID() {
         return deliveryStockID;
     }
+
+    public void setDeliveryItemQuantity(int deliveryItemQuantity) {
+        this.deliveryItemQuantity = deliveryItemQuantity;
+    }
 }

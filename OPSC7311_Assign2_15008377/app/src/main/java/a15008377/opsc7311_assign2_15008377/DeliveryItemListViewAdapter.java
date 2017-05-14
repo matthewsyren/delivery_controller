@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
     Context context;
     TextView deliveryItemID;
     TextView deliveryItemQuantity;
+    Button btnDecrementQuantity;
+    Button btnIncrementQuantity;
+    ImageButton btnRemoveItem;
     ArrayList<DeliveryItem> lstDeliveryItems;
 
     //Constructor
@@ -40,6 +45,40 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
         //Component assignments
         deliveryItemID = (TextView) convertView.findViewById(R.id.text_delivery_item_id);
         deliveryItemQuantity = (TextView) convertView.findViewById(R.id.text_delivery_item_quantity);
+        btnDecrementQuantity = (Button) convertView.findViewById(R.id.button_decrement_delivery_item);
+        btnIncrementQuantity = (Button) convertView.findViewById(R.id.button_increment_delivery_item);
+        btnRemoveItem = (ImageButton) convertView.findViewById(R.id.button_remove_delivery_item);
+
+        //Sets onClickListeners for the buttons
+        btnIncrementQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Increments the quantity of the item by 1
+                lstDeliveryItems.get(position).setDeliveryItemQuantity(lstDeliveryItems.get(position).getDeliveryItemQuantity() + 1);
+                notifyDataSetChanged();
+            }
+        });
+
+        btnDecrementQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Dcrements the quantity of the item by 1, and removes the item if the quantity is reduced to 0
+                lstDeliveryItems.get(position).setDeliveryItemQuantity(lstDeliveryItems.get(position).getDeliveryItemQuantity() - 1);
+                if(lstDeliveryItems.get(position).getDeliveryItemQuantity() == 0){
+                    lstDeliveryItems.remove(position);
+                }
+                notifyDataSetChanged();
+            }
+        });
+
+        btnRemoveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Removes the item from the ListView
+                lstDeliveryItems.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
         //Displays the data in the appropriate Views
         deliveryItemID.setText("ID: " + lstDeliveryItems.get(position).getDeliveryStockID());

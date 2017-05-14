@@ -30,6 +30,7 @@ public class AddDeliveryActivity extends AppCompatActivity {
         displayClients();
         displayItems();
         lstDeliveryItems = new ArrayList<>();
+
     }
 
     //Method populates the spinner_delivery_client with all available clients
@@ -101,19 +102,31 @@ public class AddDeliveryActivity extends AppCompatActivity {
             String deliveryDate = txtDeliveryDate.getText().toString();
             String clientID = spinner.getSelectedItem().toString();
             clientID = clientID.substring(0, clientID.indexOf(" "));
-            Delivery delivery = new Delivery(deliveryID, clientID, deliveryDate, 0, new ArrayList<DeliveryItem>());
+            Delivery delivery = new Delivery(deliveryID, clientID, deliveryDate, 0, getDeliveryItems());
+            getDeliveryItems();
 
             //Writes the delivery details to the database if the information is valid
             if(delivery.validateDelivery(this) && !delivery.checkDeliveryID(this)){
                 DBAdapter dbAdapter = new DBAdapter(this);
                 dbAdapter.open();
                 dbAdapter.insertDelivery(delivery.getDeliveryID(), delivery.getDeliveryClientID(), delivery.getDeliveryDate(), delivery.getDeliveryComplete());
+                Toast.makeText(this, "Items inserted: " + dbAdapter.insertDeliveryItem(delivery.getDeliveryID(), delivery.getLstDeliveryItems()), Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
             }
         }
         catch(Exception exc){
             Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Method reads the list_view_delivery_items ListView and returns an ArrayList containing all the DeliveryItem objects within it
+    public ArrayList<DeliveryItem> getDeliveryItems() throws NullPointerException{
+        ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+        ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+        for(int i = 0; i < listView.getCount(); i++){
+            lstDeliveryItems.add((DeliveryItem) listView.getItemAtPosition(i));
+        }
+        return lstDeliveryItems;
     }
 
     //Method adds the a DeliveryItem to the list_view_delivery_items ListView
@@ -128,11 +141,14 @@ public class AddDeliveryActivity extends AppCompatActivity {
             deliveryItemID = deliveryItemID.substring(0, deliveryItemID.indexOf(" "));
             DeliveryItem deliveryItem = new DeliveryItem(deliveryItemID, deliveryItemQuantity);
             lstDeliveryItems.add(deliveryItem);
+            ArrayAdapter<String> spinnerAdapter = (ArrayAdapter<String>) spinner.getAdapter();
+            spinnerAdapter.remove(spinner.getSelectedItem().toString());
+            spinnerAdapter.notifyDataSetChanged();
 
             //Sets the ListViewAdapter for list_view_delivery_items
-            DeliveryItemListViewAdapter adapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
+            DeliveryItemListViewAdapter deliveryItemListViewAdapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
             ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
-            listView.setAdapter(adapter);
+            listView.setAdapter(deliveryItemListViewAdapter);
         }
         catch(NumberFormatException nfe){
             Toast.makeText(this, "Please enter a whole number for the Delivery Item Quantity", Toast.LENGTH_SHORT).show();

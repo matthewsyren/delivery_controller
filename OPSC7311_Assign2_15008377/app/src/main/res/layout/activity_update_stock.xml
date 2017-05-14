@@ -22,7 +22,8 @@
         android:id="@+id/text_stock_id"
         android:layout_below="@id/label_stock_id"
         style="@style/TextStyle"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:enabled="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,13 +59,13 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
     <Button
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/button_update_stock"
-    android:layout_below="@+id/text_stock_quantity"
-    android:text="@string/button_update_client"
-    style="@style/TextStyle"
-    android:onClick="updateStockOnClick"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_update_stock"
+        android:layout_below="@+id/text_stock_quantity"
+        android:text="@string/button_update_client"
+        style="@style/TextStyle"
+        android:onClick="updateStockOnClick"/>
 
     <Button
         android:layout_width="match_parent"
