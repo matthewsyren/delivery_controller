@@ -88,6 +88,7 @@ public class Stock implements Serializable{
         return stockIDTaken;
     }
 
+    //Method returns an ArrayList of all Stock items in the Stock.txt text file
     public static ArrayList<Stock> readStockItems(Context context) throws IOException {
         BufferedReader bufferedReader = null;
         String line;

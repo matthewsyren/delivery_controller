@@ -75,6 +75,9 @@ public class Client implements Serializable{
         if(clientID.length() == 0){
             displayMessage("Please enter a Client ID", context);
         }
+        else if(clientID.contains(" ")){
+            displayMessage("Please remove all spaces from the Client ID", context);
+        }
         else if(clientName.length() == 0){
             displayMessage("Please enter a Client Name", context);
         }

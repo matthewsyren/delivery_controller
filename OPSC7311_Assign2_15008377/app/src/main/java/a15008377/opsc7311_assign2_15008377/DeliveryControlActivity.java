@@ -37,7 +37,7 @@ public class DeliveryControlActivity extends BaseActivity {
         Cursor cursor = dbAdapter.getAllDeliveries();
         if(cursor.moveToFirst()){
             do{
-                Toast.makeText(this, "ID: " + cursor.getString(0) + "\nClient: " + cursor.getString(1) + "\nDate: " +cursor.getString(2) + "\nCompleted: " + cursor.getInt(3), Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "ID: " + cursor.getString(0) + "\nClient: " + cursor.getString(1) + "\nDate: " +cursor.getString(2) + "\nCompleted: " + cursor.getInt(3), Toast.LENGTH_LONG).show();
             }while(cursor.moveToNext());
         }
     }

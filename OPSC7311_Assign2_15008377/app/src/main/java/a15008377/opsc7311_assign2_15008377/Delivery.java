@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Matthew Syrén on 2017/05/13.
@@ -16,13 +17,15 @@ public class Delivery {
     private String deliveryClientID;
     private String deliveryDate;
     private int deliveryComplete;
+    private ArrayList<DeliveryItem> lstDeliveryItems;
 
     //Constructor
-    public Delivery(String deliveryID, String deliveryClientID, String deliveryDate, int deliveryComplete) {
+    public Delivery(String deliveryID, String deliveryClientID, String deliveryDate, int deliveryComplete, ArrayList<DeliveryItem> lstDeliveryItems) {
         this.deliveryID = deliveryID;
         this.deliveryClientID = deliveryClientID;
         this.deliveryDate = deliveryDate;
         this.deliveryComplete = deliveryComplete;
+        this.lstDeliveryItems = lstDeliveryItems;
     }
 
     //Getter methods
@@ -55,6 +58,9 @@ public class Delivery {
         }
         else if(deliveryDate.length() == 0){
             displayMessage("Please enter a Delivery Date", context);
+        }
+        else if(lstDeliveryItems.size() == 0){
+            displayMessage("Please add at least one item to your delivery", context);
         }
         else{
             validStock = true;

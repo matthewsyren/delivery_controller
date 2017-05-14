@@ -9,67 +9,124 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="a15008377.opsc7311_assign2_15008377.AddDeliveryActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_delivery_id"
-        android:text="@string/label_delivery_id"
-        style="@style/TextStyle"/>
-
-    <EditText
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_delivery_id"
-        android:layout_below="@id/label_delivery_id"
-        style="@style/TextStyle"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_delivery_id"
+                android:text="@string/label_delivery_id"
+                style="@style/TextStyle"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_delivery_client"
-        android:layout_below="@+id/text_delivery_id"
-        android:text="@string/label_client_name"
-        style="@style/TextStyle"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_delivery_id"
+                android:layout_below="@id/label_delivery_id"
+                style="@style/TextStyle"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_delivery_client"
-        android:layout_below="@+id/label_delivery_client"
-        style="@style/TextStyle"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_delivery_client"
+                android:layout_below="@+id/text_delivery_id"
+                android:text="@string/label_delivery_client"
+                style="@style/TextStyle"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_delivery_date"
-        android:layout_below="@+id/spinner_delivery_client"
-        android:text="@string/label_delivery_date"
-        style="@style/TextStyle"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_delivery_client"
+                android:layout_below="@+id/label_delivery_client"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_delivery_date"
-        android:layout_toRightOf="@+id/label_delivery_date"
-        android:layout_below="@id/spinner_delivery_client"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        style="@style/TextStyle"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_delivery_date"
+                android:layout_below="@+id/spinner_delivery_client"
+                android:text="@string/label_delivery_date"
+                style="@style/TextStyle"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Date"
-        android:onClick="chooseDateOnClick"
-        android:layout_below="@+id/label_delivery_date"
-        android:id="@+id/button_choose_date"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_delivery_date"
+                android:layout_toRightOf="@+id/label_delivery_date"
+                android:layout_below="@id/spinner_delivery_client"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                style="@style/TextStyle"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_add_delivery"
-        android:text="@string/button_add_delivery"
-        android:layout_below="@+id/button_choose_date"
-        android:onClick="addDeliveryOnClick"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Date"
+                android:onClick="chooseDateOnClick"
+                android:layout_below="@+id/label_delivery_date"
+                android:id="@+id/button_choose_date"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/relative_layout_delivery_items"
+                android:layout_below="@+id/button_choose_date"
+                android:background="#abcdef">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/label_delivery_items"
+                    android:text="@string/label_delivery_items"
+                    style="@style/TextStyle"/>
 
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_delivery_items"
+                    android:layout_below="@+id/label_delivery_items"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/label_delivery_item_quantity"
+                    android:text="@string/label_delivery_item_quantity"
+                    style="@style/TextStyle"
+                    android:layout_below="@id/spinner_delivery_items"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_delivery_item_quantity"
+                    android:layout_below="@id/label_delivery_item_quantity"
+                    style="@style/TextStyle"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:inputType="number"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_add_delivery"
+                    android:text="@string/button_add_delivery_item"
+                    android:layout_below="@+id/text_delivery_item_quantity"
+                    android:onClick="addDeliveryItemOnClick"/>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/list_view_delivery_items"
+                    android:layout_below="@id/button_add_delivery" />
+            </RelativeLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_add_delivery_item"
+                android:text="@string/button_add_delivery"
+                android:layout_below="@+id/relative_layout_delivery_items"
+                android:onClick="addDeliveryOnClick"/>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

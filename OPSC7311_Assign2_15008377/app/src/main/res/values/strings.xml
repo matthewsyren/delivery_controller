@@ -48,5 +48,8 @@
     <!-- AddDeliveryActivity -->
     <string name="label_delivery_id">Delivery ID</string>
     <string name="label_delivery_date">Delivery Date</string>
-    <string name="labeldelivery_client">Delivery Client</string>
+    <string name="label_delivery_client">Delivery Client</string>
+    <string name="label_delivery_items">Delivery Items</string>
+    <string name="label_delivery_item_quantity">Item Quantity</string>
+    <string name="button_add_delivery_item">Add Item To Delivery</string>
 </resources>
