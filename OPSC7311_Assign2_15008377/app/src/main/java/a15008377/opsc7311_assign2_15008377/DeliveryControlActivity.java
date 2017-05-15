@@ -3,25 +3,11 @@ package a15008377.opsc7311_assign2_15008377;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DeliveryControlActivity extends BaseActivity {
 
@@ -37,7 +23,9 @@ public class DeliveryControlActivity extends BaseActivity {
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         Cursor deliveryCursor  = dbAdapter.getAllDeliveries();
-       ArrayList<Delivery> lstDeliveries = new ArrayList<>();
+        final ArrayList<Delivery> lstDeliveries = new ArrayList<>();
+
+        //Loops through Cursor and adds each Delivery item to the lstDeliveries ArrayList
         if(deliveryCursor.moveToFirst()){
             do{
                 Cursor deliveryItems = dbAdapter.getDeliveryItems(deliveryCursor.getString(0));
@@ -53,16 +41,29 @@ public class DeliveryControlActivity extends BaseActivity {
                 }
             }while(deliveryCursor.moveToNext());
 
+            //Sets the Adapter for the list_view_deliveries ListView
             DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
-            ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
+            final ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
             listView.setAdapter(adapter);
+
+            //Sets OnItemClickListener, which will pass the information of the Delivery clicked to the DeliveryActivity
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
+                    intent.putExtra("action", "update");
+                    intent.putExtra("deliveryObject", lstDeliveries.get(position));
+                    startActivity(intent);
+                }
+            });
         }
     }
 
-    //Method takes the user to the AddDeliveryActivity
+    //Method takes the user to the DeliveryActivity
     public void addDeliveryOnClick(View view){
         try{
-            Intent intent = new Intent(DeliveryControlActivity.this, AddDeliveryActivity.class);
+            Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
+            intent.putExtra("action", "add");
             startActivity(intent);
         }
         catch(Exception exc){

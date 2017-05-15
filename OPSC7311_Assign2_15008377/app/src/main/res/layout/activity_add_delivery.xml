@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="a15008377.opsc7311_assign2_15008377.AddDeliveryActivity">
+    tools:context="a15008377.opsc7311_assign2_15008377.DeliveryActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -74,6 +74,7 @@
                 android:onClick="chooseDateOnClick"
                 android:layout_below="@+id/label_delivery_date"
                 android:id="@+id/button_choose_date"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,7 +115,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button_add_delivery"
+                    android:id="@+id/button_add_delivery_item"
                     android:text="@string/button_add_delivery_item"
                     android:layout_below="@+id/text_delivery_item_quantity"
                     android:onClick="addDeliveryItemOnClick"/>
@@ -123,12 +124,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:id="@+id/list_view_delivery_items"
-                    android:layout_below="@id/button_add_delivery" />
+                    android:layout_below="@id/button_add_delivery_item" />
             </RelativeLayout>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_add_delivery_item"
+                android:id="@+id/button_add_delivery"
                 android:text="@string/button_add_delivery"
                 android:layout_below="@+id/relative_layout_delivery_items"
                 android:onClick="addDeliveryOnClick"/>

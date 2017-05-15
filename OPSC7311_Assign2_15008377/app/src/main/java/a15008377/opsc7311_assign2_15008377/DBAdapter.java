@@ -133,7 +133,6 @@ public class DBAdapter {
             contentValues.put(KEY_DELIVERY_ITEM_QUANTITY, lstDeliveryItems.get(i).getDeliveryItemQuantity());
             itemsInserted += sqLiteDatabase.insert(DATABASE_DELIVERY_ITEM_TABLE, null, contentValues);
         }
-
         return itemsInserted;
     }
 
@@ -186,5 +185,22 @@ public class DBAdapter {
         contentValues.put(KEY_CLIENT_LONGITUDE, clientLongitude);
 
         return sqLiteDatabase.update(DATABASE_CLIENT_TABLE, contentValues, KEY_CLIENT_ID + "='" + clientID + "'", null) > 0;
+    }
+
+    //Method updates a specific record in the appropriate table
+    public boolean updateDelivery(Delivery delivery) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_DELIVERY_ID, delivery.getDeliveryID());
+        contentValues.put(KEY_DELIVERY_CLIENT_ID, delivery.getDeliveryClientID());
+        contentValues.put(KEY_DELIVERY_DATE, delivery.getDeliveryDate());
+        contentValues.put(KEY_DELIVERY_COMPLETED, delivery.getDeliveryComplete());
+
+        return sqLiteDatabase.update(DATABASE_DELIVERY_TABLE, contentValues, KEY_DELIVERY_ID + "='" + delivery.getDeliveryID() + "'", null) > 0;
+    }
+
+    //Method deletes all DeliveryItems associated with a Delivery
+    //Method deletes a record from the appropriate table
+    public boolean deleteDeliveryItems(String deliveryID) {
+        return sqLiteDatabase.delete(DATABASE_DELIVERY_ITEM_TABLE, KEY_DELIVERY_ID + "='" + deliveryID + "'", null) > 0;
     }
 }

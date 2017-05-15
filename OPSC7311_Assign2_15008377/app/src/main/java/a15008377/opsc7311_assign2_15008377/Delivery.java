@@ -5,13 +5,14 @@ import android.database.Cursor;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Matthew Syrén on 2017/05/13.
  */
 
-public class Delivery {
+public class Delivery implements Serializable {
     //Declarations
     private String deliveryID;
     private String deliveryClientID;

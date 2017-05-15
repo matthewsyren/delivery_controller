@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,18 +20,48 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AddDeliveryActivity extends AppCompatActivity {
+public class DeliveryActivity extends AppCompatActivity {
+    //Declarations
     ArrayList<DeliveryItem> lstDeliveryItems;
+    String action;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_delivery);
 
+        //Determines whether the user is adding or updating, and calls the appropriate methods
+        Bundle bundle = getIntent().getExtras();
+        action = bundle.getString("action");
+        Button button = (Button) findViewById(R.id.button_add_delivery);
+
+        if(action.equals("update")){
+            button.setText("Update Delivery");
+            Delivery delivery = (Delivery) bundle.getSerializable("deliveryObject");
+            displayDelivery(delivery);
+        }
+        else if(action.equals("add")){
+            button.setText("Add Delivery");
+            ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+            DeliveryItemListViewAdapter adapter = new DeliveryItemListViewAdapter(this, new ArrayList<DeliveryItem>());
+            listView.setAdapter(adapter);
+        }
+
         //Method displays the clients in the spinner_delivery_client Spinner
         displayClients();
         displayItems();
         lstDeliveryItems = new ArrayList<>();
+    }
 
+    //Method displays the Delivery object's values
+    public void displayDelivery(Delivery delivery){
+        EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
+        TextView txtDeliveryDate = (TextView) findViewById(R.id.text_delivery_date);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_delivery_client);
+
+        txtDeliveryID.setText(delivery.getDeliveryID());
+        txtDeliveryDate.setText(delivery.getDeliveryDate());
+        displayDeliveryItems(delivery.getDeliveryID());
     }
 
     //Method populates the spinner_delivery_client with all available clients
@@ -75,6 +106,24 @@ public class AddDeliveryActivity extends AppCompatActivity {
         }
     }
 
+    //Method displays the Delivery's selected items in the list_view_delivery_items
+    public void displayDeliveryItems(String deliveryID){
+        DBAdapter dbAdapter = new DBAdapter(this);
+        dbAdapter.open();
+        Cursor cursor = dbAdapter.getDeliveryItems(deliveryID);
+        ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            do{
+                DeliveryItem deliveryItem = new DeliveryItem(cursor.getString(0), cursor.getInt(1));
+                lstDeliveryItems.add(deliveryItem);
+            }while(cursor.moveToNext());
+
+            DeliveryItemListViewAdapter deliveryItemListViewAdapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
+            ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+            listView.setAdapter(deliveryItemListViewAdapter);
+        }
+        dbAdapter.close();
+    }
     //Method displays a DatePickerDialog for the user to choose the delivery date
     public void chooseDateOnClick(View vie){
         Calendar calendar = Calendar.getInstance();
@@ -106,12 +155,23 @@ public class AddDeliveryActivity extends AppCompatActivity {
             getDeliveryItems();
 
             //Writes the delivery details to the database if the information is valid
-            if(delivery.validateDelivery(this) && !delivery.checkDeliveryID(this)){
-                DBAdapter dbAdapter = new DBAdapter(this);
-                dbAdapter.open();
-                dbAdapter.insertDelivery(delivery.getDeliveryID(), delivery.getDeliveryClientID(), delivery.getDeliveryDate(), delivery.getDeliveryComplete());
-                Toast.makeText(this, "Items inserted: " + dbAdapter.insertDeliveryItem(delivery.getDeliveryID(), delivery.getLstDeliveryItems()), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
+            if(delivery.validateDelivery(this)){
+                if(action.equals("add")){
+                    DBAdapter dbAdapter = new DBAdapter(this);
+                    dbAdapter.open();
+                    dbAdapter.insertDelivery(delivery.getDeliveryID(), delivery.getDeliveryClientID(), delivery.getDeliveryDate(), delivery.getDeliveryComplete());
+                    Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Items inserted: " + dbAdapter.insertDeliveryItem(delivery.getDeliveryID(), delivery.getLstDeliveryItems()), Toast.LENGTH_LONG).show();
+                    dbAdapter.close();
+                }
+                else if(action.equals("update")){
+                    DBAdapter dbAdapter = new DBAdapter(this);
+                    dbAdapter.open();
+                    dbAdapter.updateDelivery(delivery);
+                    dbAdapter.deleteDeliveryItems(delivery.getDeliveryID());
+                    dbAdapter.insertDeliveryItem(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+                    Toast.makeText(getApplicationContext(), "Updated delivery successfully", Toast.LENGTH_LONG).show();
+                }
             }
         }
         catch(Exception exc){
@@ -146,8 +206,9 @@ public class AddDeliveryActivity extends AppCompatActivity {
             spinnerAdapter.notifyDataSetChanged();
 
             //Sets the ListViewAdapter for list_view_delivery_items
-            DeliveryItemListViewAdapter deliveryItemListViewAdapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
             ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+            DeliveryItemListViewAdapter deliveryItemListViewAdapter = (DeliveryItemListViewAdapter) listView.getAdapter();
+            deliveryItemListViewAdapter.add(deliveryItem);
             listView.setAdapter(deliveryItemListViewAdapter);
         }
         catch(NumberFormatException nfe){

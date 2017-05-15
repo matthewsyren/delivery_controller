@@ -1,10 +1,12 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import java.io.Serializable;
+
 /**
  * Created by Matthew Syrén on 2017/05/14.
  */
 
-public class DeliveryItem {
+public class DeliveryItem implements Serializable{
     //Declarations
     private String deliveryStockID;
     private int deliveryItemQuantity;
@@ -24,6 +26,7 @@ public class DeliveryItem {
         return deliveryStockID;
     }
 
+    //Setter method
     public void setDeliveryItemQuantity(int deliveryItemQuantity) {
         this.deliveryItemQuantity = deliveryItemQuantity;
     }

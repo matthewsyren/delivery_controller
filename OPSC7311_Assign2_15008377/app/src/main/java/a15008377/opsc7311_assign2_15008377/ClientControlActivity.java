@@ -47,10 +47,11 @@ public class ClientControlActivity extends BaseActivity{
             ListView listView = (ListView) findViewById(R.id.list_view_clients);
             listView.setAdapter(adapter);
 
-            //Sets an OnItemClickListener on the ListView, which will take the user to the UpdateClientActivity, where the user will be able to update information about the Clients
+            //Sets an OnItemClickListener on the ListView, which will take the user to the ClientActivity, where the user will be able to update information about the Clients
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
-                    Intent intent = new Intent(ClientControlActivity.this, UpdateClientActivity.class);
+                    Intent intent = new Intent(ClientControlActivity.this, ClientActivity.class);
+                    intent.putExtra("action", "update");
                     intent.putExtra("clientObject", lstClients.get(pos));
                     startActivity(intent);
                 }
@@ -61,9 +62,10 @@ public class ClientControlActivity extends BaseActivity{
         }
     }
 
-    //Method takes the user to the AddClientActivity
+    //Method takes the user to the ClientActivity
     public void addClientOnClick(View view){
-        Intent intent = new Intent(ClientControlActivity.this, AddClientActivity.class);
+        Intent intent = new Intent(ClientControlActivity.this, ClientActivity.class);
+        intent.putExtra("action", "add");
         startActivity(intent);
     }
 }
