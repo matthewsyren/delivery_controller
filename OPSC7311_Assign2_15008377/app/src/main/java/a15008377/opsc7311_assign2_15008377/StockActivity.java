@@ -1,5 +1,6 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -53,6 +54,7 @@ public class StockActivity extends AppCompatActivity {
             EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
             EditText txtStockDescription = (EditText) findViewById(R.id.text_stock_description);
             EditText txtStockQuantity = (EditText) findViewById(R.id.text_stock_quantity);
+            Intent intent = null;
 
             String stockID = txtStockID.getText().toString();
             String stockDescription = txtStockDescription.getText().toString();
@@ -62,6 +64,9 @@ public class StockActivity extends AppCompatActivity {
             if(stock.validateStock(this)){
                 if(action.equals("add") && !stock.checkStockID(this)){
                     writeToFile(stock.getStockID(), stock.getStockDescription(), stock.getStockQuantity());
+                    Toast.makeText(this, "Stock item added successfully", Toast.LENGTH_LONG).show();
+                    intent = getIntent();
+                    finish();
                 }
                 else if(action.equals("update")){
                     //Fetches all Stock items from the Stock.txt text file
@@ -78,7 +83,9 @@ public class StockActivity extends AppCompatActivity {
 
                     rewriteFile(lstStock);
                     Toast.makeText(this, "Stock item updated successfully", Toast.LENGTH_LONG).show();
+                    intent = new Intent(StockActivity.this, StockControlActivity.class);
                 }
+                startActivity(intent);
             }
 
         }
@@ -97,7 +104,6 @@ public class StockActivity extends AppCompatActivity {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
         outputStreamWriter.write(stockID + "|" + stockDescription + "|" + stockQuantity + "\n");
         outputStreamWriter.close();
-        Toast.makeText(this, "Stock item added successfully", Toast.LENGTH_LONG).show();
     }
 
     //Method deletes item from text file

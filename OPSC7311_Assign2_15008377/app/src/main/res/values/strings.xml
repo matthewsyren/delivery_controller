@@ -52,4 +52,5 @@
     <string name="label_delivery_items">Delivery Items</string>
     <string name="label_delivery_item_quantity">Item Quantity</string>
     <string name="button_add_delivery_item">Add Item To Delivery</string>
+    <string name="title_activity_delivery_map">Map</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -20,7 +21,7 @@ import android.widget.ImageButton;
  * Class provides a base for the NavigationDrawer that is shared amongst the activities
  */
 
-public class BaseActivity extends Activity
+public class BaseActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     //Declarations

@@ -33,7 +33,13 @@ public class Client implements Serializable{
         this.clientAddress = clientAddress;
     }
 
-    //Getter methods
+    public Client(String clientID, String clientName, String clientEmail, String clientAddress, double clientLatitude, double clientLongitude) {
+        this(clientID, clientName, clientEmail, clientAddress);
+        this.clientLatitude = clientLatitude;
+        this.clientLongitude = clientLongitude;
+    }
+
+        //Getter methods
     public String getClientID() {
         return clientID;
     }
@@ -98,8 +104,8 @@ public class Client implements Serializable{
         boolean stockIDTaken = false;
         DBAdapter dbAdapter = new DBAdapter(context);
         dbAdapter.open();
-        Cursor cursor = dbAdapter.getClient(clientID);
-        if(cursor.moveToFirst()){
+        Client client = dbAdapter.getClient(clientID);
+        if(client != null){
             stockIDTaken = true;
             displayMessage("Client ID is taken, please choose another one", context);
         }

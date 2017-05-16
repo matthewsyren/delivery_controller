@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,6 +25,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
     TextView deliveryDate;
     TextView deliveryComplete;
     TextView deliveryItems;
+    ImageButton deleteDelivery;
 
     ArrayList<Delivery> lstDeliveries;
 
@@ -45,6 +49,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         deliveryDate = (TextView) convertView.findViewById(R.id.text_delivery_date);
         deliveryComplete = (TextView) convertView.findViewById(R.id.text_delivery_complete);
         deliveryItems = (TextView) convertView.findViewById(R.id.text_delivery_items);
+        deleteDelivery = (ImageButton) convertView.findViewById(R.id.button_delete_delivery);
 
         //Displays the data in the appropriate Views
         deliveryID.setText("Delivery ID: " + lstDeliveries.get(position).getDeliveryID());
@@ -52,12 +57,28 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         deliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
         deliveryComplete.setText("Delivery Complete: " + lstDeliveries.get(position).getDeliveryComplete() + "\n\n");
 
-        ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();
+        final ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();
         String itemText = "Delivery Items: \n";
         for(int i = 0; i < lstDeliveryItems.size(); i++){
-            itemText += "Item ID: " + lstDeliveryItems.get(i).getDeliveryStockID() + "\nQuantity: " + lstDeliveryItems.get(i).getDeliveryItemQuantity() + "\n\n";
+            if(i != 0){
+                itemText += "\n\n";
+            }
+            itemText += "Item ID: " + lstDeliveryItems.get(i).getDeliveryStockID() + "\nQuantity: " + lstDeliveryItems.get(i).getDeliveryItemQuantity();
         }
         deliveryItems.setText(itemText);
+
+        deleteDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBAdapter dbAdapter = new DBAdapter(context);
+                dbAdapter.open();
+                dbAdapter.deleteDelivery(lstDeliveries.get(position).getDeliveryID());
+                lstDeliveries.remove(position);
+                Toast.makeText(context, "Delivery successfully deleted", Toast.LENGTH_LONG).show();
+                dbAdapter.close();
+                notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }

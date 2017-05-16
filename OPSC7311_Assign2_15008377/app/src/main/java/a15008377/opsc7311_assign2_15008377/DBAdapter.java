@@ -99,31 +99,31 @@ public class DBAdapter {
     }
 
     //Method inserts a record to the appropriate table
-    public long insertClient(String clientID, String clientName, String clientEmail, String clientAddress, double clientLatitude, double clientLongitude) {
+    public long insertClient(Client client) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_CLIENT_ID, clientID);
-        contentValues.put(KEY_CLIENT_NAME, clientName);
-        contentValues.put(KEY_CLIENT_EMAIL, clientEmail);
-        contentValues.put(KEY_CLIENT_ADDRESS, clientAddress);
-        contentValues.put(KEY_CLIENT_LATITUDE, clientLatitude);
-        contentValues.put(KEY_CLIENT_LONGITUDE, clientLongitude);
+        contentValues.put(KEY_CLIENT_ID, client.getClientID());
+        contentValues.put(KEY_CLIENT_NAME, client.getClientName());
+        contentValues.put(KEY_CLIENT_EMAIL, client.getClientEmail());
+        contentValues.put(KEY_CLIENT_ADDRESS, client.getClientAddress());
+        contentValues.put(KEY_CLIENT_LATITUDE, client.getClientLatitude());
+        contentValues.put(KEY_CLIENT_LONGITUDE, client.getClientLongitude());
 
         return sqLiteDatabase.insert(DATABASE_CLIENT_TABLE, null, contentValues);
     }
 
     //Method inserts a record to the appropriate table
-    public long insertDelivery(String deliveryID, String deliveryClientID, String deliveryDate, int deliveryCompleted) {
+    public long insertDelivery(Delivery delivery) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_DELIVERY_ID, deliveryID);
-        contentValues.put(KEY_DELIVERY_CLIENT_ID, deliveryClientID);
-        contentValues.put(KEY_DELIVERY_DATE, deliveryDate);
-        contentValues.put(KEY_DELIVERY_COMPLETED, deliveryCompleted);
+        contentValues.put(KEY_DELIVERY_ID, delivery.getDeliveryID());
+        contentValues.put(KEY_DELIVERY_CLIENT_ID, delivery.getDeliveryClientID());
+        contentValues.put(KEY_DELIVERY_DATE, delivery.getDeliveryDate());
+        contentValues.put(KEY_DELIVERY_COMPLETED, delivery.getDeliveryComplete());
 
         return sqLiteDatabase.insert(DATABASE_DELIVERY_TABLE, null, contentValues);
     }
 
     //Method inserts a record to the appropriate table
-    public int insertDeliveryItem(String deliveryID, ArrayList<DeliveryItem> lstDeliveryItems) {
+    public int insertDeliveryItems(String deliveryID, ArrayList<DeliveryItem> lstDeliveryItems) {
         int itemsInserted = 0;
 
         for(int i = 0; i < lstDeliveryItems.size(); i++){
@@ -141,6 +141,11 @@ public class DBAdapter {
         return sqLiteDatabase.delete(DATABASE_CLIENT_TABLE, KEY_CLIENT_ID + "='" + clientID + "'", null) > 0;
     }
 
+    //Method deletes a record from the appropriate table
+    public boolean deleteDelivery(String deliveryID) {
+        return sqLiteDatabase.delete(DATABASE_DELIVERY_TABLE, KEY_DELIVERY_ID + "='" + deliveryID + "'", null) > 0;
+    }
+
     //Method retrieves all records from the appropriate table
     public Cursor getAllClients() {
         return sqLiteDatabase.query(DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_ID, KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, null, null, null, null, null);
@@ -152,9 +157,19 @@ public class DBAdapter {
     }
 
     //Method retrieves a specific record from the appropriate database
-    public Cursor getClient(String clientID) throws SQLException {
+    public Client getClient(String clientID) throws SQLException {
         Cursor cursor = sqLiteDatabase.query(true, DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, KEY_CLIENT_ID + "='" + clientID + "'", null, null, null, null, null);
-        return cursor;
+        Client client;
+        if(cursor.moveToFirst()){
+            Log.i("KEY", "HERE");
+            client = new Client(clientID, cursor.getString(0), cursor.getString(1),cursor.getString(2),cursor.getDouble(3),cursor.getDouble(4));
+        }
+        else{
+            Log.i("KEY", "THERE " + clientID);
+            client = null;
+        }
+
+        return client;
     }
 
     //Method retrieves all records from the appropriate table

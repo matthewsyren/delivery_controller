@@ -47,9 +47,5 @@
             android:src="@drawable/ic_delete"
             android:layout_weight="0.33"
             style="@style/TextStyle"/>
-
-
-
     </LinearLayout>
-
 </LinearLayout>

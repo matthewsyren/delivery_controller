@@ -21,6 +21,17 @@ public class ClientControlActivity extends BaseActivity{
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_client_control);
 
+        populateViews();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        populateViews();
+    }
+
+    //Method populates the views that need to be displayed on the Activity
+    public void populateViews(){
         displayClients();
     }
 

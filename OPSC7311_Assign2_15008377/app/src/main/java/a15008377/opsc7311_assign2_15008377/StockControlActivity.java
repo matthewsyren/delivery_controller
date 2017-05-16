@@ -22,6 +22,17 @@ public class StockControlActivity extends BaseActivity {
         super.setSelectedNavItem(R.id.nav_stock_control);
 
         //Method populates the Stock report
+        populateViews();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        populateViews();
+    }
+
+    //Method populates the views that are displayed on this Activity
+    public void populateViews(){
         displayStock();
     }
 

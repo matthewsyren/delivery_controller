@@ -1,6 +1,7 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,22 +91,27 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             if(location != null){
                 client.setClientLatitude(location.getDouble("lat"));
                 client.setClientLongitude(location.getDouble("lng"));
+                Intent intent = null;
 
                 Toast.makeText(this, "Lat: " + client.getClientLatitude() + "\nLon: " + client.getClientLongitude(), Toast.LENGTH_LONG).show();
 
                 DBAdapter dbAdapter = new DBAdapter(this);
                 dbAdapter.open();
                 if(action.equals("add")){
-                    if(dbAdapter.insertClient(client.getClientID(), client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude()) >= 0){
+                    if(dbAdapter.insertClient(client) >= 0){
                         Toast.makeText(getApplicationContext(), "Client successfully added", Toast.LENGTH_LONG).show();
+                        intent = getIntent();
+                        finish();
                     }
                 }
                 else if(action.equals("update")){
                     if(dbAdapter.updateClient(client.getClientID(), client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude())){
                         Toast.makeText(getApplicationContext(), "Client successfully updated", Toast.LENGTH_LONG).show();
+                        intent = new Intent(ClientActivity.this, ClientControlActivity.class);
                     }
                 }
                 dbAdapter.close();
+                startActivity(intent);
             }
         }
         catch(Exception exc){

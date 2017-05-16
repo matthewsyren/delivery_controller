@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,8 +28,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
     ArrayList<DeliveryItem> lstDeliveryItems;
 
     //Constructor
-    public DeliveryItemListViewAdapter(Context context, ArrayList<DeliveryItem> lstDeliveryItems)
-    {
+    public DeliveryItemListViewAdapter(Context context, ArrayList<DeliveryItem> lstDeliveryItems) {
         super(context, R.layout.list_view_row_delivery_item_report, lstDeliveryItems);
         this.context = context;
         this.lstDeliveryItems = lstDeliveryItems;
@@ -36,8 +36,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
 
     //Method populates the appropriate Views with the appropriate data (stored in the shows ArrayList)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         //Inflates the list_row view for the ListView
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         convertView = inflater.inflate(R.layout.list_view_row_delivery_item_report, parent, false);
@@ -62,7 +61,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
         btnDecrementQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Dcrements the quantity of the item by 1, and removes the item if the quantity is reduced to 0
+                //Decrements the quantity of the item by 1, and removes the item if the quantity is reduced to 0
                 lstDeliveryItems.get(position).setDeliveryItemQuantity(lstDeliveryItems.get(position).getDeliveryItemQuantity() - 1);
                 if(lstDeliveryItems.get(position).getDeliveryItemQuantity() == 0){
                     lstDeliveryItems.remove(position);

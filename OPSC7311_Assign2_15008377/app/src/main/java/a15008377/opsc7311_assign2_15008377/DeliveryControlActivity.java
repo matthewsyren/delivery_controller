@@ -20,6 +20,22 @@ public class DeliveryControlActivity extends BaseActivity {
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_delivery_control);
 
+        populateViews();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        populateViews();
+    }
+
+    //Method populates the views that are displayed on this Activity
+    public void populateViews(){
+        populateReport();
+    }
+
+    //Method populates the ListView on this Activity
+    public void populateReport(){
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         Cursor deliveryCursor  = dbAdapter.getAllDeliveries();
@@ -57,6 +73,7 @@ public class DeliveryControlActivity extends BaseActivity {
                 }
             });
         }
+        dbAdapter.close();
     }
 
     //Method takes the user to the DeliveryActivity
