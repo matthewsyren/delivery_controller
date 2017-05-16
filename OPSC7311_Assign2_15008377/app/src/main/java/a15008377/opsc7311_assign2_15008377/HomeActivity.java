@@ -61,12 +61,13 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
             }
 
             //Animates camera to zoom in on Markers once the map has been loaded
-            RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_home);
+            final RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_home);
             layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     LatLngBounds bounds = builder.build();
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                    layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });
         }

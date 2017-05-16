@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -25,6 +27,7 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
     private TextView clientEmail;
     private TextView clientAddress;
     private ArrayList<Client> lstClients;
+    private ImageButton deleteClient;
 
     //Constructor
     public ClientReportListViewAdapter(Context context, ArrayList<Client> lstClients)
@@ -47,12 +50,28 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
         clientName = (TextView) convertView.findViewById(R.id.text_client_name);
         clientEmail = (TextView) convertView.findViewById(R.id.text_client_email);
         clientAddress = (TextView) convertView.findViewById(R.id.text_client_address);
+        deleteClient = (ImageButton) convertView.findViewById(R.id.button_delete_client);
 
         //Displays the data in the appropriate Views
         clientID.setText("ID: " + lstClients.get(position).getClientID());
         clientName.setText("Name: " + lstClients.get(position).getClientName());
         clientEmail.setText("Email: " + lstClients.get(position).getClientEmail());
         clientAddress.setText("Address: " + lstClients.get(position).getClientAddress());
+
+        //Sets OnClickListener for the button_delete_client Button
+        deleteClient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBAdapter dbAdapter = new DBAdapter(context);
+                dbAdapter.open();
+                dbAdapter.deleteClient(lstClients.get(position).getClientID());
+                lstClients.remove(position);
+                Toast.makeText(context, "Client successfully deleted", Toast.LENGTH_LONG).show();
+                dbAdapter.close();
+                notifyDataSetChanged();
+            }
+        });
+
         return convertView;
     }
 }

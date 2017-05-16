@@ -19,4 +19,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_stock_quantity"
         style="@style/ListViewTextStyle"/>
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete"
+        android:id="@+id/button_delete_stock"
+        android:focusable="false" />
 </LinearLayout>

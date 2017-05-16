@@ -1,5 +1,6 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,7 +82,7 @@ public class StockActivity extends AppCompatActivity {
                         }
                     }
 
-                    rewriteFile(lstStock);
+                    stock.rewriteFile(lstStock, getApplicationContext());
                     Toast.makeText(this, "Stock item updated successfully", Toast.LENGTH_LONG).show();
                     intent = new Intent(StockActivity.this, StockControlActivity.class);
                 }
@@ -106,38 +107,5 @@ public class StockActivity extends AppCompatActivity {
         outputStreamWriter.close();
     }
 
-    //Method deletes item from text file
-    public void deleteItem() throws IOException{
-        EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
-        String stockID = txtStockID.getText().toString();
-        boolean foundStockID = false;
 
-        ArrayList<Stock> lstStock = Stock.readStockItems(this);
-        for(int i = 0; i < lstStock.size() && !foundStockID; i++) {
-            if(lstStock.get(i).getStockID().equals(stockID)){
-                lstStock.remove(i);
-                i--;
-                foundStockID = true;
-            }
-        }
-        rewriteFile(lstStock);
-        Toast.makeText(getApplicationContext(), "Stock item successfully deleted", Toast.LENGTH_LONG).show();
-    }
-
-    //Method deletes the contents of the Stock.txt file and rewrites its content (used once a Stock item has been updated or deleted)
-    public void rewriteFile(ArrayList<Stock> lstStock) throws IOException{
-        //Clears contents of file
-        File file = new File(getFilesDir(), "Stock.txt");
-        PrintWriter writer = new PrintWriter(file);
-        writer.print("");
-        writer.close();
-
-        //Writes updated data to the Stock.txt text file
-        FileOutputStream fileOutputStream = openFileOutput(file.getName(), MODE_APPEND);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-        for(int i = 0; i < lstStock.size(); i++){
-            outputStreamWriter.write(lstStock.get(i).getStockID() + "|" + lstStock.get(i).getStockDescription() + "|" + lstStock.get(i).getStockQuantity() + "\n");
-        }
-        outputStreamWriter.close();
-    }
 }

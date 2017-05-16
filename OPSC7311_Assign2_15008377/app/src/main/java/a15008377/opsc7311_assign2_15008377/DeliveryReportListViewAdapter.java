@@ -67,6 +67,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         }
         deliveryItems.setText(itemText);
 
+        //Sets OnClickListener for the button_delete_delivery Button
         deleteDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

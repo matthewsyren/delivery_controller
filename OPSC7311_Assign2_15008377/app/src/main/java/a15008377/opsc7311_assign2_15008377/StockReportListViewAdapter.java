@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ListResourceBundle;
 
@@ -28,6 +31,7 @@ public class StockReportListViewAdapter extends ArrayAdapter {
     TextView stockDescription;
     TextView latestQuantity;
     ArrayList<Stock> lstStock;
+    ImageButton btnDeleteStock;
 
     //Constructor
     public StockReportListViewAdapter(Context context, ArrayList<Stock> stock)
@@ -49,11 +53,28 @@ public class StockReportListViewAdapter extends ArrayAdapter {
         stockID = (TextView) convertView.findViewById(R.id.text_stock_id);
         stockDescription = (TextView) convertView.findViewById(R.id.text_stock_description);
         latestQuantity = (TextView) convertView.findViewById(R.id.text_stock_quantity);
+        btnDeleteStock = (ImageButton) convertView.findViewById(R.id.button_delete_stock);
 
         //Displays the data in the appropriate Views
         stockID.setText("ID: " + lstStock.get(position).getStockID());
         stockDescription.setText("Description: " + lstStock.get(position).getStockDescription());
         latestQuantity.setText("Quantity: " + lstStock.get(position).getStockQuantity());
+
+        //Sets OnClickListener for the button_delete_stock Button
+        btnDeleteStock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    new Stock().deleteStockItem(lstStock.get(position).getStockID(), context);
+                    lstStock.remove(position);
+                    notifyDataSetChanged();
+                }
+                catch(IOException ioe){
+                    Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         return convertView;
     }
 }

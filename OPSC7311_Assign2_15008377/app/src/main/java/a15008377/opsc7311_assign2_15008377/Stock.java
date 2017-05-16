@@ -1,16 +1,22 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import static android.content.Context.MODE_APPEND;
 
 /**
  * Created by Matthew Syrén on 2017/05/09.
@@ -28,6 +34,8 @@ public class Stock implements Serializable{
         this.stockDescription = stockDescription;
         this.stockQuantity = stockQuantity;
     }
+
+    public Stock(){}
 
     //Getter methods
     public String getStockID() {
@@ -104,6 +112,38 @@ public class Stock implements Serializable{
             lstStock.add(stock);
         }
         return lstStock;
+    }
+
+    public void deleteStockItem(String stockID, Context context) throws IOException{
+        boolean foundStockID = false;
+
+        ArrayList<Stock> lstStock = Stock.readStockItems(context);
+        for(int i = 0; i < lstStock.size() && !foundStockID; i++) {
+            if(lstStock.get(i).getStockID().equals(stockID)){
+                lstStock.remove(i);
+                i--;
+                foundStockID = true;
+            }
+        }
+        rewriteFile(lstStock, context);
+        Toast.makeText(context, "Stock item successfully deleted", Toast.LENGTH_LONG).show();
+    }
+
+    //Method deletes the contents of the Stock.txt file and rewrites its content (used once a Stock item has been updated or deleted)
+    public void rewriteFile(ArrayList<Stock> lstStock, Context context) throws IOException{
+        //Clears contents of file
+        File file = new File(context.getFilesDir(), "Stock.txt");
+        PrintWriter writer = new PrintWriter(file);
+        writer.print("");
+        writer.close();
+
+        //Writes updated data to the Stock.txt text file
+        FileOutputStream fileOutputStream = context.openFileOutput(file.getName(), MODE_APPEND);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+        for(int i = 0; i < lstStock.size(); i++){
+            outputStreamWriter.write(lstStock.get(i).getStockID() + "|" + lstStock.get(i).getStockDescription() + "|" + lstStock.get(i).getStockQuantity() + "\n");
+        }
+        outputStreamWriter.close();
     }
 
     //Method displays a Toast message with the message that is passed in as a parameter
