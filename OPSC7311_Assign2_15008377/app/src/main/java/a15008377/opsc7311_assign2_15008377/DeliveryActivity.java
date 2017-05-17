@@ -39,8 +39,11 @@ public class DeliveryActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         action = bundle.getString("action");
         Button button = (Button) findViewById(R.id.button_add_delivery);
+        lstDeliveryItems = new ArrayList<>();
 
         if(action.equals("update")){
+            EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
+            txtDeliveryID.setEnabled(false);
             button.setText("Update Delivery");
             Delivery delivery = (Delivery) bundle.getSerializable("deliveryObject");
             displayDelivery(delivery);
@@ -63,7 +66,6 @@ public class DeliveryActivity extends AppCompatActivity {
         //Method displays the clients in the spinner_delivery_client Spinner
         displayClients();
         displayItems();
-        lstDeliveryItems = new ArrayList<>();
     }
 
     //Method displays the Delivery object's values
@@ -187,29 +189,66 @@ public class DeliveryActivity extends AppCompatActivity {
             String deliveryDate = txtDeliveryDate.getText().toString();
             String clientID = spinner.getSelectedItem().toString();
             clientID = clientID.substring(0, clientID.indexOf(" "));
-            Delivery delivery = new Delivery(deliveryID, clientID, deliveryDate, 0, getDeliveryItems());
-            getDeliveryItems();
+            ArrayList<DeliveryItem> lstDeliveryItems = getDeliveryItems();
+            ArrayList<Stock> lstStock = new Stock().readStockItems(this);
 
-            DBAdapter dbAdapter = new DBAdapter(this);
-            dbAdapter.open();
-            //Writes the delivery details to the database if the information is valid
-            if(delivery.validateDelivery(this)){
-                if(action.equals("add")){
-                    dbAdapter.insertDelivery(delivery);
-                    Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
-                    dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
-                    intent = getIntent();
-                    finish();
+            //Loops through available Stock to ensure that there is enough Stock available to cater for the Delivery
+            boolean enoughStock = true;
+
+            for(int i = 0; i < lstDeliveryItems.size(); i++){
+                String deliveryStockID = lstDeliveryItems.get(i).getDeliveryStockID();
+                int numberOfItems = lstDeliveryItems.get(i).getDeliveryItemQuantity();
+                for(int j = 0; j < lstStock.size(); j++){
+                    String stockID = lstStock.get(j).getStockID();
+                    int availableStockQuantity = lstStock.get(j).getStockQuantity();
+
+                    if(deliveryStockID.equals(stockID)){
+                        if(numberOfItems > availableStockQuantity){
+                            Toast.makeText(getApplicationContext(), "There are only " + availableStockQuantity + " item/s left of " + deliveryStockID + ". Please reduce the number of " + deliveryStockID + " items for this delivery", Toast.LENGTH_LONG).show();
+                            enoughStock = false;
+                        }
+                        else{
+                            if(action.equals("update")){
+                                DBAdapter dbAdapter = new DBAdapter(this);
+                                dbAdapter.open();
+                                Cursor cursor = dbAdapter.getDeliveryItem(deliveryID, deliveryStockID);
+                                if(cursor.moveToFirst()){
+                                    int oldQuantity = cursor.getInt(1);
+                                    availableStockQuantity += oldQuantity;
+                                }
+                            }
+                            lstStock.get(j).setStockQuantity(availableStockQuantity - numberOfItems);
+                        }
+                    }
                 }
-                else if(action.equals("update")){
-                    dbAdapter.updateDelivery(delivery);
-                    dbAdapter.deleteDeliveryItems(delivery.getDeliveryID());
-                    dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
-                    Toast.makeText(getApplicationContext(), "Updated delivery successfully", Toast.LENGTH_LONG).show();
-                    intent = new Intent(DeliveryActivity.this, DeliveryControlActivity.class);
+            }
+
+            //Writes the Delivery details to the database if there is enough Stock for the Delivery
+            if(enoughStock){
+                Delivery delivery = new Delivery(deliveryID, clientID, deliveryDate, 0, getDeliveryItems());
+                DBAdapter dbAdapter = new DBAdapter(this);
+                dbAdapter.open();
+
+                //Writes the delivery details to the database if the information is valid
+                if(delivery.validateDelivery(this)){
+                    if(action.equals("add")){
+                        dbAdapter.insertDelivery(delivery);
+                        Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
+                        dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+                        intent = getIntent();
+                        finish();
+                    }
+                    else if(action.equals("update")){
+                        dbAdapter.updateDelivery(delivery);
+                        dbAdapter.deleteDeliveryItems(delivery.getDeliveryID());
+                        dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+                        Toast.makeText(getApplicationContext(), "Updated delivery successfully", Toast.LENGTH_LONG).show();
+                        intent = new Intent(DeliveryActivity.this, DeliveryControlActivity.class);
+                    }
+                    new Stock().rewriteFile(lstStock, this);
+                    startActivity(intent);
+                    dbAdapter.close();
                 }
-                startActivity(intent);
-                dbAdapter.close();
             }
         }
         catch(Exception exc){
