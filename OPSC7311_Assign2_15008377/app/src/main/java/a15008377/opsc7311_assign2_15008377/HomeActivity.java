@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.database.Cursor;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -11,8 +12,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -46,7 +47,9 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
             do{
                 String clientID = deliveryCursor.getString(1);
                 Client client = dbAdapter.getClient(clientID);
-                if(client != null){
+                Calendar calendar = Calendar.getInstance();
+                String currentDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+                if(client != null && deliveryCursor.getInt(3) == 0 && deliveryCursor.getString(2).equals(currentDate)){
                     //Creates new Marker and title for Marker, and adds them to appropriate ArrayLists
                     LatLng clientLocation = new LatLng(client.getClientLatitude(), client.getClientLongitude());
                     lstMarkers.add(clientLocation);
@@ -65,8 +68,13 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
             layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    LatLngBounds bounds = builder.build();
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                    try{
+                        LatLngBounds bounds = builder.build();
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                    }
+                    catch(IllegalStateException ise){
+                        Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
+                    }
                     layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });

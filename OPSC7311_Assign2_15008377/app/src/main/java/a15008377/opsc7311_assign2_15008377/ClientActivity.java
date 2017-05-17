@@ -26,6 +26,8 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
         Bundle bundle = getIntent().getExtras();
         action = bundle.getString("action");
         if(action.equals("update")){
+            EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
+            txtClientID.setEnabled(false);
             Button button = (Button) findViewById(R.id.button_add_client);
             button.setText("Update Client");
             Client client = (Client) bundle.getSerializable("clientObject");

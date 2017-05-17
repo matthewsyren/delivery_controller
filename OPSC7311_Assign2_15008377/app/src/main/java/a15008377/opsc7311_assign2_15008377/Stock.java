@@ -50,6 +50,11 @@ public class Stock implements Serializable{
         return stockQuantity;
     }
 
+    //Setter methods
+    public void setStockQuantity(int stockQuantity){
+        this.stockQuantity = stockQuantity;
+    }
+
     //Method returns true if the Stock object has valid values for all of its attributes, otherwise it returns false
     public boolean validateStock(Context context){
         boolean validStock = false;
@@ -114,6 +119,7 @@ public class Stock implements Serializable{
         return lstStock;
     }
 
+    //Method deletes a Stock item from the Stock.txt file
     public void deleteStockItem(String stockID, Context context) throws IOException{
         boolean foundStockID = false;
 

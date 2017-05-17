@@ -161,11 +161,9 @@ public class DBAdapter {
         Cursor cursor = sqLiteDatabase.query(true, DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, KEY_CLIENT_ID + "='" + clientID + "'", null, null, null, null, null);
         Client client;
         if(cursor.moveToFirst()){
-            Log.i("KEY", "HERE");
             client = new Client(clientID, cursor.getString(0), cursor.getString(1),cursor.getString(2),cursor.getDouble(3),cursor.getDouble(4));
         }
         else{
-            Log.i("KEY", "THERE " + clientID);
             client = null;
         }
 
@@ -180,6 +178,12 @@ public class DBAdapter {
     //Method retrieves a specific record from the appropriate database
     public Cursor getDeliveryItems(String deliveryID) throws SQLException {
         Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
+        return cursor;
+    }
+
+    //Method retrieves a specific record from the appropriate database
+    public Cursor getDeliveryItem(String deliveryID, String stockID) throws SQLException {
+        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "' AND " + KEY_DELIVERY_ITEM_ID + "='" + stockID + "'", null, null, null, null, null);
         return cursor;
     }
 

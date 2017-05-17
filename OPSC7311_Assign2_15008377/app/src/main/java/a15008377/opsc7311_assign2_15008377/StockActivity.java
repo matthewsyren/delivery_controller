@@ -28,6 +28,8 @@ public class StockActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         action = bundle.getString("action");
         if(action.equals("update")){
+            EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
+            txtStockID.setEnabled(false);
             Button button = (Button) findViewById(R.id.button_add_stock);
             button.setText("Update Stock");
             Stock stock = (Stock) bundle.getSerializable("stockObject");
