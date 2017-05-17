@@ -50,6 +50,11 @@ public class Delivery implements Serializable {
         return lstDeliveryItems;
     }
 
+    //Setter methods
+    public void setLstDeliveryItems(ArrayList<DeliveryItem> lstDeliveryItems) {
+        this.lstDeliveryItems = lstDeliveryItems;
+    }
+
     //Method ensures that the Client has valid values for all of its fields
     public boolean validateDelivery(Context context){
         boolean validStock = false;

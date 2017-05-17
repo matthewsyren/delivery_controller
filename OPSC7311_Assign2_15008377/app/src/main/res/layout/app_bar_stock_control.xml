@@ -25,6 +25,21 @@
                 android:src="@drawable/ic_menu"
                 android:background="?android:attr/selectableItemBackground"
                 android:id="@+id/button_menu" />
+
+            <EditText
+                android:id="@+id/text_search_stock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_bar_text_size"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:layout_marginLeft="@dimen/app_bar_margin"
+                android:layout_marginRight="@dimen/app_bar_margin"
+                android:paddingLeft="@dimen/app_bar_search_padding"
+                android:imeOptions="actionSearch"
+                android:hint="@string/text_stock_search_hint"
+                android:maxLines="1"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

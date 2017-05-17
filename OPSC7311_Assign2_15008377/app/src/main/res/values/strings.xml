@@ -20,6 +20,7 @@
     <string name="button_update_stock">Update Stock</string>
     <string name="button_delete_stock">Delete Stock</string>
     <string name="text_stock_report_heading">Available Stock</string>
+    <string name="text_stock_search_hint">Search for Stock ID...</string>
 
     <!-- StockActivity -->
     <string name="label_stock_id">Stock ID:</string>
@@ -31,6 +32,7 @@
     <string name="button_update_client">Update Client</string>
     <string name="button_delete_client">Delete Client</string>
     <string name="text_client_report_heading">Current Clients</string>
+    <string name="text_client_search_hint">Search for Client ID...</string>
 
     <!-- ClientActivity -->
     <string name="label_client_id">Client ID</string>
@@ -46,6 +48,7 @@
     <string name="button_update_delivery">Update Delivery</string>
     <string name="button_delete_delivery">Delete Delivery</string>
     <string name="text_delivery_report_heading">Upcoming Deliveries</string>
+    <string name="text_delivery_search_hint">Search for Delivery ID...</string>
 
     <!-- DeliveryActivity -->
     <string name="label_delivery_id">Delivery ID</string>

@@ -152,6 +152,11 @@ public class DBAdapter {
     }
 
     //Method retrieves all records from the appropriate table
+    public Cursor searchClients(String searchTerm) {
+        return sqLiteDatabase.query(DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_ID, KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, KEY_CLIENT_ID + " LIKE '%" + searchTerm + "%'", null, null, null, null);
+    }
+
+    //Method retrieves all records from the appropriate table
     public Cursor getAllDeliveries() {
         return sqLiteDatabase.query(DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, null, null, null, null, null);
     }
@@ -190,6 +195,12 @@ public class DBAdapter {
     //Method retrieves a specific record from the appropriate database
     public Cursor getDelivery(String deliveryID) throws SQLException {
         Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
+        return cursor;
+    }
+
+    //Method retrieves a specific record from the appropriate database
+    public Cursor searchDelivery(String searchTerm) throws SQLException {
+        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + " LIKE '%" + searchTerm + "%'", null, null, null, null, null);
         return cursor;
     }
 

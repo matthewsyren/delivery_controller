@@ -1,9 +1,13 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,6 +25,23 @@ public class StockControlActivity extends BaseActivity {
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_stock_control);
 
+        //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+        final EditText txtSearchStock = (EditText) findViewById(R.id.text_search_stock);
+        txtSearchStock.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    String searchTerm = txtSearchStock.getText().toString();
+                    searchStock(searchTerm);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    Toast.makeText(getApplicationContext(), "Search complete " + searchTerm + "!", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         //Method populates the Stock report
         populateViews();
     }
@@ -31,16 +52,39 @@ public class StockControlActivity extends BaseActivity {
         populateViews();
     }
 
+    //Method fetches all Stock items that match the search and sends them to the displayStock method
+    public void searchStock(String searchTerm){
+        try{
+            ArrayList<Stock> lstStock = Stock.readStockItems(this);
+            for(int i = 0; i < lstStock.size(); i++){
+                if(!lstStock.get(i).getStockID().contains(searchTerm)){
+                    lstStock.remove(i);
+                    i--;
+                }
+            }
+
+            displayStock(lstStock);
+        }
+        catch(Exception exc){
+            Toast.makeText(getBaseContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     //Method populates the views that are displayed on this Activity
     public void populateViews(){
-        displayStock();
+        try{
+            ArrayList<Stock> lstStock = Stock.readStockItems(this);
+            displayStock(lstStock);
+        }
+        catch(IOException ioe){
+            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method populates the list_view_available_stock ListView
-    public void displayStock(){
+    public void displayStock(final ArrayList<Stock> lstStock){
         try{
             //Sets the custom adapter for the ListView to display the Stock data
-            final ArrayList<Stock> lstStock = Stock.readStockItems(this);
             StockReportListViewAdapter adapter = new StockReportListViewAdapter(this, lstStock);
             ListView listView = (ListView) findViewById(R.id.list_view_available_stock);
             listView.setAdapter(adapter);
@@ -55,8 +99,8 @@ public class StockControlActivity extends BaseActivity {
                 }
             });
         }
-        catch(IOException ioe){
-            Toast.makeText(getBaseContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

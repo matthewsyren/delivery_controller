@@ -1,13 +1,17 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import android.view.View.OnKeyListener;
 import java.util.ArrayList;
 
 public class ClientControlActivity extends BaseActivity{
@@ -21,6 +25,24 @@ public class ClientControlActivity extends BaseActivity{
         super.onCreateDrawer();
         super.setSelectedNavItem(R.id.nav_client_control);
 
+        //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+        final EditText txtSearchClient = (EditText) findViewById(R.id.text_search_client);
+        txtSearchClient.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    String searchTerm = txtSearchClient.getText().toString();
+                    searchClients(searchTerm);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //Populates the views that need to be displayed on the Activity
         populateViews();
     }
 
@@ -32,11 +54,28 @@ public class ClientControlActivity extends BaseActivity{
 
     //Method populates the views that need to be displayed on the Activity
     public void populateViews(){
-        displayClients();
+        getAllClients();
     }
 
-    //Method populates the ListView with the client data stored in the database
-    public void displayClients(){
+    //Method fetches an ArrayList of the Clients that match the search term entered by the user
+    public void searchClients(String searchTerm){
+        DBAdapter dbAdapter = new DBAdapter(this);
+        dbAdapter.open();
+        Cursor cursor = dbAdapter.searchClients(searchTerm);
+        ArrayList<Client> lstSearchResults = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            do{
+                Client client = new Client(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                lstSearchResults.add(client);
+            }while(cursor.moveToNext());
+        }
+        dbAdapter.close();
+        displayClients(lstSearchResults);
+    }
+
+    //Fetches all the Clients from the database and sends them to the displayClient method
+    public void getAllClients(){
         try{
             DBAdapter db = new DBAdapter(this);
             db.open();
@@ -53,6 +92,16 @@ public class ClientControlActivity extends BaseActivity{
             }
             db.close();
 
+            displayClients(lstClients);
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //Method populates the ListView with the client data stored in the database
+    public void displayClients(final ArrayList<Client> lstClients){
+        try{
             //Sets the ListViewAdapter for list_view_clients
             ClientReportListViewAdapter adapter = new ClientReportListViewAdapter(this, lstClients);
             ListView listView = (ListView) findViewById(R.id.list_view_clients);
