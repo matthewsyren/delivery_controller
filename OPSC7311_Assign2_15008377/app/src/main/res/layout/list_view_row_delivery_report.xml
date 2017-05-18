@@ -56,13 +56,14 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_delete"
                     android:id="@+id/button_delete_delivery"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    style="@style/SecondaryButtonStyle"/>
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/button_mark_delivery_as_complete"
-                    style="@style/TextStyle"
+                    style="@style/SecondaryButtonStyle"
                     android:text="@string/button_mark_delivery_as_complete"
                     android:onClick="markDeliveryAsCompleteOnClick"/>
             </LinearLayout>

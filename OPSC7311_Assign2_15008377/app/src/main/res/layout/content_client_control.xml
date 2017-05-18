@@ -23,7 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_clients"
-        android:layout_below="@+id/text_client_report_heading"/>
+        android:layout_below="@+id/text_client_report_heading"
+        android:fadeScrollbars="false"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -33,5 +34,6 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_add"
+        android:background="@color/colorPrimary"
         android:onClick="addClientOnClick"/>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_add_delivery"
     android:layout_width="match_parent"
@@ -9,14 +10,18 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="a15008377.opsc7311_assign2_15008377.DeliveryActivity">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="26dp">
+        android:layout_marginBottom="26dp"
+        android:fadeScrollbars="false">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -48,7 +53,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_delivery_client"
                 android:layout_below="@+id/label_delivery_client"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,27 +79,24 @@
                 android:text="Choose Date"
                 android:onClick="chooseDateOnClick"
                 android:layout_below="@+id/label_delivery_date"
-                android:id="@+id/button_choose_date"/>
+                android:id="@+id/button_choose_date"
+                style="@style/SecondaryButtonStyle" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/relative_layout_delivery_items"
-                android:layout_below="@+id/button_choose_date"
-                android:background="#abcdef">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/label_delivery_items"
                     android:text="@string/label_delivery_items"
-                    style="@style/TextStyle"/>
+                    style="@style/TextStyle"
+                    android:layout_below="@+id/button_choose_date"/>
 
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spinner_delivery_items"
                     android:layout_below="@+id/label_delivery_items"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -118,21 +121,37 @@
                     android:id="@+id/button_add_delivery_item"
                     android:text="@string/button_add_delivery_item"
                     android:layout_below="@+id/text_delivery_item_quantity"
-                    android:onClick="addDeliveryItemOnClick"/>
+                    android:onClick="addDeliveryItemOnClick"
+                    style="@style/SecondaryButtonStyle"/>
 
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:id="@+id/list_view_delivery_items"
-                    android:layout_below="@id/button_add_delivery_item" />
-            </RelativeLayout>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_add_delivery"
                 android:text="@string/button_add_delivery"
-                android:layout_below="@+id/relative_layout_delivery_items"
-                android:onClick="addDeliveryOnClick"/>
+                android:layout_below="@+id/button_add_delivery_item"
+                android:onClick="addDeliveryOnClick"
+                style="@style/PrimaryButtonStyle"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:background="@color/gray">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/HeadingTextStyle"
+            android:text="Delivery Items"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/list_view_delivery_items"
+            android:fadeScrollbars="false"/>
+    </LinearLayout>
+</LinearLayout>

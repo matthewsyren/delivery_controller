@@ -49,8 +49,9 @@
                     android:layout_height="match_parent"
                     android:id="@+id/button_increment_delivery_item"
                     android:text="@string/button_increment_delivery_item"
-                    style="@style/TextStyle"
-                    android:layout_weight="0.33"/>
+                    style="@style/SecondaryButtonStyle"
+                    android:layout_weight="0.33"
+                    android:textSize="@dimen/label_text_size"/>
 
                 <Button
                     android:layout_width="match_parent"
@@ -58,7 +59,8 @@
                     android:id="@+id/button_decrement_delivery_item"
                     android:text="@string/button_decrement_delivery_item"
                     android:layout_weight="0.33"
-                    style="@style/TextStyle"/>
+                    style="@style/SecondaryButtonStyle"
+                    android:textSize="@dimen/label_text_size"/>
 
                 <ImageButton
                     android:layout_width="match_parent"
@@ -66,7 +68,7 @@
                     android:id="@+id/button_remove_delivery_item"
                     android:src="@drawable/ic_delete"
                     android:layout_weight="0.33"
-                    style="@style/TextStyle"/>
+                    style="@style/SecondaryButtonStyle" />
             </LinearLayout>
             </LinearLayout>
     </android.support.v7.widget.CardView>

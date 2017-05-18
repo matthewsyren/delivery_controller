@@ -11,7 +11,8 @@
     tools:context="a15008377.opsc7311_assign2_15008377.StockActivity">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fadeScrollbars="false">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -70,7 +71,7 @@
                 android:id="@+id/button_add_stock"
                 android:layout_below="@+id/text_stock_quantity"
                 android:text="@string/button_add_stock"
-                style="@style/TextStyle"
+                style="@style/PrimaryButtonStyle"
                 android:onClick="addStockOnClick"/>
         </RelativeLayout>
     </ScrollView>
