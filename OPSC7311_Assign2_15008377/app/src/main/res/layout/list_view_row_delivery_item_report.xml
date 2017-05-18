@@ -29,7 +29,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/text_delivery_item_id"
-                    style="@style/ListViewTextStyle"/>
+                    style="@style/ListViewTextStyle"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,14 +48,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/button_increment_delivery_item"
-                    android:text="+"
+                    android:text="@string/button_increment_delivery_item"
+                    style="@style/TextStyle"
                     android:layout_weight="0.33"/>
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/button_decrement_delivery_item"
-                    android:text="-"
+                    android:text="@string/button_decrement_delivery_item"
                     android:layout_weight="0.33"
                     style="@style/TextStyle"/>
 

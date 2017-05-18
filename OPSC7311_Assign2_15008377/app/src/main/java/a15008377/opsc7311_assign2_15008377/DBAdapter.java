@@ -146,6 +146,11 @@ public class DBAdapter {
         return sqLiteDatabase.delete(DATABASE_DELIVERY_TABLE, KEY_DELIVERY_ID + "='" + deliveryID + "'", null) > 0;
     }
 
+    //Method deletes a record from the appropriate table
+    public boolean deleteClientDeliveries(String clientID) {
+        return sqLiteDatabase.delete(DATABASE_DELIVERY_TABLE, KEY_DELIVERY_CLIENT_ID + "='" + clientID + "'", null) > 0;
+    }
+
     //Method retrieves all records from the appropriate table
     public Cursor getAllClients() {
         return sqLiteDatabase.query(DATABASE_CLIENT_TABLE, new String[] {KEY_CLIENT_ID, KEY_CLIENT_NAME, KEY_CLIENT_EMAIL, KEY_CLIENT_ADDRESS, KEY_CLIENT_LATITUDE, KEY_CLIENT_LONGITUDE}, null, null, null, null, null);
@@ -229,8 +234,11 @@ public class DBAdapter {
     }
 
     //Method deletes all DeliveryItems associated with a Delivery
-    //Method deletes a record from the appropriate table
     public boolean deleteDeliveryItems(String deliveryID) {
         return sqLiteDatabase.delete(DATABASE_DELIVERY_ITEM_TABLE, KEY_DELIVERY_ID + "='" + deliveryID + "'", null) > 0;
+    }
+    //Method deletes all DeliveryItems associated with a Delivery
+    public boolean deleteDeliveryItemsByStockID(String stockID) {
+        return sqLiteDatabase.delete(DATABASE_DELIVERY_ITEM_TABLE, KEY_DELIVERY_ITEM_ID + "='" + stockID + "'", null) > 0;
     }
 }

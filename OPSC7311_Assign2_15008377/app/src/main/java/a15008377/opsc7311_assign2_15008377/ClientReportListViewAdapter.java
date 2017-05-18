@@ -22,12 +22,7 @@ import java.util.ArrayList;
 public class ClientReportListViewAdapter extends ArrayAdapter{
     //Declarations
     private Context context;
-    private TextView clientID;
-    private TextView clientName;
-    private TextView clientEmail;
-    private TextView clientAddress;
     private ArrayList<Client> lstClients;
-    private ImageButton deleteClient;
 
     //Constructor
     public ClientReportListViewAdapter(Context context, ArrayList<Client> lstClients)
@@ -41,34 +36,46 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
+        //View declarations
+        TextView txtClientID;
+        TextView txtClientName;
+        TextView txtClientEmail;
+        TextView txtClientAddress;
+        ImageButton btnDeleteClient;
+
         //Inflates the list_row view for the ListView
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         convertView = inflater.inflate(R.layout.list_view_row_client_report, parent, false);
 
         //Component assignments
-        clientID = (TextView) convertView.findViewById(R.id.text_client_id);
-        clientName = (TextView) convertView.findViewById(R.id.text_client_name);
-        clientEmail = (TextView) convertView.findViewById(R.id.text_client_email);
-        clientAddress = (TextView) convertView.findViewById(R.id.text_client_address);
-        deleteClient = (ImageButton) convertView.findViewById(R.id.button_delete_client);
+        txtClientID = (TextView) convertView.findViewById(R.id.text_client_id);
+        txtClientName = (TextView) convertView.findViewById(R.id.text_client_name);
+        txtClientEmail = (TextView) convertView.findViewById(R.id.text_client_email);
+        txtClientAddress = (TextView) convertView.findViewById(R.id.text_client_address);
+        btnDeleteClient = (ImageButton) convertView.findViewById(R.id.button_delete_client);
 
         //Displays the data in the appropriate Views
-        clientID.setText("ID: " + lstClients.get(position).getClientID());
-        clientName.setText("Name: " + lstClients.get(position).getClientName());
-        clientEmail.setText("Email: " + lstClients.get(position).getClientEmail());
-        clientAddress.setText("Address: " + lstClients.get(position).getClientAddress());
+        txtClientID.setText("ID: " + lstClients.get(position).getClientID());
+        txtClientName.setText("Name: " + lstClients.get(position).getClientName());
+        txtClientEmail.setText("Email: " + lstClients.get(position).getClientEmail());
+        txtClientAddress.setText("Address: " + lstClients.get(position).getClientAddress());
 
         //Sets OnClickListener for the button_delete_client Button
-        deleteClient.setOnClickListener(new View.OnClickListener() {
+        btnDeleteClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DBAdapter dbAdapter = new DBAdapter(context);
                 dbAdapter.open();
-                dbAdapter.deleteClient(lstClients.get(position).getClientID());
-                lstClients.remove(position);
-                Toast.makeText(context, "Client successfully deleted", Toast.LENGTH_LONG).show();
+                String clientID = lstClients.get(position).getClientID();
+
+                //Deletes Client and the Deliveries associated with that Client
+                if(dbAdapter.deleteClient(clientID)){
+                    dbAdapter.deleteClientDeliveries(clientID);
+                    lstClients.remove(position);
+                    Toast.makeText(context, "Client successfully deleted", Toast.LENGTH_LONG).show();
+                    notifyDataSetChanged();
+                }
                 dbAdapter.close();
-                notifyDataSetChanged();
             }
         });
 

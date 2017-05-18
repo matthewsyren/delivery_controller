@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -20,14 +21,7 @@ import java.util.ArrayList;
 public class DeliveryReportListViewAdapter extends ArrayAdapter {
     //Declarations
     Context context;
-    TextView deliveryID;
-    TextView deliveryClientID;
-    TextView deliveryDate;
-    TextView deliveryComplete;
-    TextView deliveryItems;
-    ImageButton deleteDelivery;
-
-    ArrayList<Delivery> lstDeliveries;
+    private ArrayList<Delivery> lstDeliveries;
 
     public DeliveryReportListViewAdapter(Context context, ArrayList<Delivery> lstDeliveries) {
         super(context, R.layout.list_view_row_delivery_report,lstDeliveries);
@@ -39,23 +33,33 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
+        //View declarations
+        TextView txtDeliveryID;
+        TextView txtDeliveryClientID;
+        TextView txtDeliveryDate;
+        TextView txtDeliveryComplete;
+        TextView txtDeliveryItems;
+        ImageButton btnDeleteDelivery;
+        Button btnMarkDeliveryAsComplete;
+
         //Inflates the list_row view for the ListView
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         convertView = inflater.inflate(R.layout.list_view_row_delivery_report, parent, false);
 
         //Component assignments
-        deliveryID = (TextView) convertView.findViewById(R.id.text_delivery_id);
-        deliveryClientID = (TextView) convertView.findViewById(R.id.text_delivery_client_id);
-        deliveryDate = (TextView) convertView.findViewById(R.id.text_delivery_date);
-        deliveryComplete = (TextView) convertView.findViewById(R.id.text_delivery_complete);
-        deliveryItems = (TextView) convertView.findViewById(R.id.text_delivery_items);
-        deleteDelivery = (ImageButton) convertView.findViewById(R.id.button_delete_delivery);
+        txtDeliveryID = (TextView) convertView.findViewById(R.id.text_delivery_id);
+        txtDeliveryClientID = (TextView) convertView.findViewById(R.id.text_delivery_client_id);
+        txtDeliveryDate = (TextView) convertView.findViewById(R.id.text_delivery_date);
+        txtDeliveryComplete = (TextView) convertView.findViewById(R.id.text_delivery_complete);
+        txtDeliveryItems = (TextView) convertView.findViewById(R.id.text_delivery_items);
+        btnDeleteDelivery = (ImageButton) convertView.findViewById(R.id.button_delete_delivery);
+        btnMarkDeliveryAsComplete = (Button) convertView.findViewById(R.id.button_mark_delivery_as_complete);
 
         //Displays the data in the appropriate Views
-        deliveryID.setText("Delivery ID: " + lstDeliveries.get(position).getDeliveryID());
-        deliveryClientID.setText("Client ID: " + lstDeliveries.get(position).getDeliveryClientID());
-        deliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
-        deliveryComplete.setText("Delivery Complete: " + lstDeliveries.get(position).getDeliveryComplete() + "\n\n");
+        txtDeliveryID.setText("Delivery ID: " + lstDeliveries.get(position).getDeliveryID());
+        txtDeliveryClientID.setText("Client ID: " + lstDeliveries.get(position).getDeliveryClientID());
+        txtDeliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
+        txtDeliveryComplete.setText("Delivery Complete: " + lstDeliveries.get(position).getDeliveryComplete() + "\n\n");
 
         final ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();
         String itemText = "Delivery Items: \n";
@@ -65,22 +69,84 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
             }
             itemText += "Item ID: " + lstDeliveryItems.get(i).getDeliveryStockID() + "\nQuantity: " + lstDeliveryItems.get(i).getDeliveryItemQuantity();
         }
-        deliveryItems.setText(itemText);
+        txtDeliveryItems.setText(itemText);
 
-        //Sets OnClickListener for the button_delete_delivery Button
-        deleteDelivery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DBAdapter dbAdapter = new DBAdapter(context);
-                dbAdapter.open();
-                dbAdapter.deleteDelivery(lstDeliveries.get(position).getDeliveryID());
-                lstDeliveries.remove(position);
-                Toast.makeText(context, "Delivery successfully deleted", Toast.LENGTH_LONG).show();
-                dbAdapter.close();
-                notifyDataSetChanged();
-            }
-        });
+        if(lstDeliveries.get(position).getDeliveryComplete() == 0){
+            //Sets OnClickListener for the button_delete_delivery Button
+            btnDeleteDelivery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DBAdapter dbAdapter = new DBAdapter(context);
+                    dbAdapter.open();
+
+                    String deliveryID = lstDeliveries.get(position).getDeliveryID();
+
+                    //Deletes the Delivery and all DeliveryItems for that Delivery
+                    if(dbAdapter.deleteDelivery(deliveryID)){
+                        dbAdapter.deleteDeliveryItems(deliveryID);
+                        addItemsBackToStock(lstDeliveries.get(position));
+                        lstDeliveries.remove(position);
+                        Toast.makeText(context, "Delivery successfully deleted", Toast.LENGTH_LONG).show();
+                        notifyDataSetChanged();
+                    }
+                    dbAdapter.close();
+                }
+            });
+
+            //Marks the Delivery as complete in the database and removes the Delivery from the lstDeliveries ArrayList
+            btnMarkDeliveryAsComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        DBAdapter dbAdapter = new DBAdapter(context);
+                        dbAdapter.open();
+                        Delivery delivery = lstDeliveries.get(position);
+                        delivery.setDeliveryComplete(1);
+                        dbAdapter.updateDelivery(delivery);
+                        lstDeliveries.remove(position);
+                        Toast.makeText(context, "Delivery marked as complete", Toast.LENGTH_SHORT).show();
+                        dbAdapter.close();
+                        notifyDataSetChanged();
+                    }
+                    catch(Exception exc){
+                        Toast.makeText(context, exc.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else{
+            btnDeleteDelivery.setVisibility(View.GONE);
+            btnMarkDeliveryAsComplete.setVisibility(View.GONE);
+        }
+
 
         return convertView;
+    }
+
+    //Method adds the items that were in the deleted Delivery back to the Stock.txt text file
+    private void addItemsBackToStock(Delivery delivery){
+        try{
+            ArrayList<Stock> lstStock = Stock.readStockItems(context);
+            ArrayList<DeliveryItem> lstDeliveryItems = delivery.getLstDeliveryItems();
+
+            //Loops through all DeliveryItems and adds them back to Stock
+            for(int i = 0; i < lstDeliveryItems.size(); i++){
+                String deliveryItemID = lstDeliveryItems.get(i).getDeliveryStockID();
+                for(int j = 0; j < lstStock.size(); j++){
+                    String stockID = lstStock.get(j).getStockID();
+
+                    if(deliveryItemID.equals(stockID)){
+                        int stockQuantity = lstStock.get(j).getStockQuantity();
+                        lstStock.get(j).setStockQuantity(stockQuantity + lstDeliveryItems.get(i).getDeliveryItemQuantity());
+                    }
+                }
+            }
+
+            //Writes the updated Stock quantities to the Stock.txt text file
+            new Stock().rewriteFile(lstStock, context);
+        }
+        catch(IOException ioe){
+            Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

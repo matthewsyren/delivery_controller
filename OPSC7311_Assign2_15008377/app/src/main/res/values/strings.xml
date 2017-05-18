@@ -49,6 +49,7 @@
     <string name="button_delete_delivery">Delete Delivery</string>
     <string name="text_delivery_report_heading">Upcoming Deliveries</string>
     <string name="text_delivery_search_hint">Search for Delivery ID...</string>
+    <string name="button_mark_delivery_as_complete">Mark as Complete</string>
 
     <!-- DeliveryActivity -->
     <string name="label_delivery_id">Delivery ID</string>
@@ -58,4 +59,10 @@
     <string name="label_delivery_item_quantity">Item Quantity</string>
     <string name="button_add_delivery_item">Add Item To Delivery</string>
     <string name="title_activity_delivery_map">Map</string>
+    <string name="button_increment_delivery_item">+</string>
+    <string name="button_decrement_delivery_item">-</string>
+    <string name="title_activity_completed_delivery">CompletedDeliveryActivity</string>
+
+    <!-- CompletedDeliveryActivity -->
+    <string name="text_completed_delivery_heading">Completed Deliveries</string>
 </resources>

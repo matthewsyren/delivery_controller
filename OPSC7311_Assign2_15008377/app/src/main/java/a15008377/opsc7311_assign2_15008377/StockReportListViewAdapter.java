@@ -26,12 +26,8 @@ import java.util.ListResourceBundle;
 
 public class StockReportListViewAdapter extends ArrayAdapter {
     //Declarations
-    Context context;
-    TextView stockID;
-    TextView stockDescription;
-    TextView latestQuantity;
-    ArrayList<Stock> lstStock;
-    ImageButton btnDeleteStock;
+    private Context context;
+    private ArrayList<Stock> lstStock;
 
     //Constructor
     public StockReportListViewAdapter(Context context, ArrayList<Stock> stock)
@@ -45,28 +41,39 @@ public class StockReportListViewAdapter extends ArrayAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
+        //View declarations
+        TextView txtStockID;
+        TextView txtStockDescription;
+        TextView txtStockQuantity;
+        ImageButton btnDeleteStock;
+
         //Inflates the list_row view for the ListView
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         convertView = inflater.inflate(R.layout.list_view_row_stock_report, parent, false);
 
         //Component assignments
-        stockID = (TextView) convertView.findViewById(R.id.text_stock_id);
-        stockDescription = (TextView) convertView.findViewById(R.id.text_stock_description);
-        latestQuantity = (TextView) convertView.findViewById(R.id.text_stock_quantity);
+        txtStockID = (TextView) convertView.findViewById(R.id.text_stock_id);
+        txtStockDescription = (TextView) convertView.findViewById(R.id.text_stock_description);
+        txtStockQuantity = (TextView) convertView.findViewById(R.id.text_stock_quantity);
         btnDeleteStock = (ImageButton) convertView.findViewById(R.id.button_delete_stock);
 
         //Displays the data in the appropriate Views
-        stockID.setText("ID: " + lstStock.get(position).getStockID());
-        stockDescription.setText("Description: " + lstStock.get(position).getStockDescription());
-        latestQuantity.setText("Quantity: " + lstStock.get(position).getStockQuantity());
+        txtStockID.setText("ID: " + lstStock.get(position).getStockID());
+        txtStockDescription.setText("Description: " + lstStock.get(position).getStockDescription());
+        txtStockQuantity.setText("Quantity: " + lstStock.get(position).getStockQuantity());
 
         //Sets OnClickListener for the button_delete_stock Button
         btnDeleteStock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
-                    new Stock().deleteStockItem(lstStock.get(position).getStockID(), context);
+                    String stockID = lstStock.get(position).getStockID();
+                    new Stock().deleteStockItem(stockID, context);
                     lstStock.remove(position);
+                    DBAdapter dbAdapter = new DBAdapter(context);
+                    dbAdapter.open();
+                    dbAdapter.deleteDeliveryItemsByStockID(stockID);
+                    dbAdapter.close();
                     notifyDataSetChanged();
                 }
                 catch(IOException ioe){

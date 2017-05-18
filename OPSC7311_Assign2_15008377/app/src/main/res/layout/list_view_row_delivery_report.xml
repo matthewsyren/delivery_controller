@@ -57,6 +57,14 @@
                     android:src="@drawable/ic_delete"
                     android:id="@+id/button_delete_delivery"
                     android:focusable="false" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_mark_delivery_as_complete"
+                    style="@style/TextStyle"
+                    android:text="@string/button_mark_delivery_as_complete"
+                    android:onClick="markDeliveryAsCompleteOnClick"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 </LinearLayout>

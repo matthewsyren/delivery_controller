@@ -102,6 +102,9 @@ public class BaseActivity extends FragmentActivity
         else if(id == R.id.nav_delivery_control){
             startActivity(new Intent(getApplicationContext(), DeliveryControlActivity.class));
         }
+        else if(id == R.id.nav_completed_deliveries){
+            startActivity(new Intent(getApplicationContext(), CompletedDeliveryActivity.class));
+        }
 
         //Closes the NavigationDrawer once the action has been completed
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

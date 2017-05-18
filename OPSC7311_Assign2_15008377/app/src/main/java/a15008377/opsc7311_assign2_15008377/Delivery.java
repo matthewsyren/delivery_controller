@@ -2,6 +2,7 @@ package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -55,6 +56,10 @@ public class Delivery implements Serializable {
         this.lstDeliveryItems = lstDeliveryItems;
     }
 
+    public void setDeliveryComplete(int deliveryComplete) {
+        this.deliveryComplete = deliveryComplete;
+    }
+
     //Method ensures that the Client has valid values for all of its fields
     public boolean validateDelivery(Context context){
         boolean validStock = false;
@@ -95,5 +100,47 @@ public class Delivery implements Serializable {
     //Method displays a Toast message with the message that is passed in as a parameter
     private void displayMessage(String message, Context context) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    //Method fetches the Deliveries that match the search result and sned them to the displayDeliveries method
+    public static ArrayList<Delivery> searchDeliveries(String searchTerm, Context context, int complete) throws SQLException{
+        DBAdapter dbAdapter = new DBAdapter(context);
+        dbAdapter.open();
+        Cursor cursor = dbAdapter.searchDelivery(searchTerm);
+        ArrayList<Delivery> lstSearchResults = new ArrayList<>();
+        ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            do{
+                Delivery delivery = new Delivery(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), lstDeliveryItems);
+                if(delivery.getDeliveryComplete() == complete){
+                    lstSearchResults.add(delivery);
+                }
+            }while(cursor.moveToNext());
+        }
+        dbAdapter.close();
+        return lstSearchResults;
+    }
+
+    //Method returns an ArrayList filled with either completed Deliveries on incompleted Deliveries
+    public static ArrayList<Delivery> getDeliveries(Context context, int complete){
+        DBAdapter dbAdapter = new DBAdapter(context);
+        dbAdapter.open();
+        Cursor deliveryCursor  = dbAdapter.getAllDeliveries();
+        final ArrayList<Delivery> lstDeliveries = new ArrayList<>();
+        ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+
+        if(deliveryCursor.moveToFirst()){
+            do{
+                Delivery delivery = new Delivery(deliveryCursor.getString(0),deliveryCursor.getString(1), deliveryCursor.getString(2), deliveryCursor.getInt(3), lstDeliveryItems);
+
+                //Adds Deliveries to the lstDeliveries ArrayList if the Delivery hasn't been completed
+                if(delivery.getDeliveryComplete() == complete){
+                    lstDeliveries.add(delivery);
+                }
+            }while(deliveryCursor.moveToNext());
+        }
+        dbAdapter.close();
+        return lstDeliveries;
     }
 }
