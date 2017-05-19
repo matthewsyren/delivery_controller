@@ -1,7 +1,9 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,18 +66,41 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
         btnDeleteClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBAdapter dbAdapter = new DBAdapter(context);
-                dbAdapter.open();
-                String clientID = lstClients.get(position).getClientID();
+                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                alertDialog.setTitle("Are you sure you want to delete this Client?");
 
-                //Deletes Client and the Deliveries associated with that Client
-                if(dbAdapter.deleteClient(clientID)){
-                    dbAdapter.deleteClientDeliveries(clientID);
-                    lstClients.remove(position);
-                    Toast.makeText(context, "Client successfully deleted", Toast.LENGTH_LONG).show();
-                    notifyDataSetChanged();
-                }
-                dbAdapter.close();
+                //Creates OnClickListener for the Dialog message
+                DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        switch(button){
+                            //Checks if the username is valid (length > 0 and every character is an alphabetic character)
+                            case AlertDialog.BUTTON_POSITIVE:
+                                DBAdapter dbAdapter = new DBAdapter(context);
+                                dbAdapter.open();
+                                String clientID = lstClients.get(position).getClientID();
+
+                                //Deletes Client and the Deliveries associated with that Client
+                                if(dbAdapter.deleteClient(clientID)){
+                                    dbAdapter.deleteClientDeliveries(clientID);
+                                    lstClients.remove(position);
+                                    Toast.makeText(context, "Client successfully deleted", Toast.LENGTH_LONG).show();
+                                    notifyDataSetChanged();
+                                }
+                                dbAdapter.close();
+                                break;
+                            case AlertDialog.BUTTON_NEGATIVE:
+                                Toast.makeText(context, "Deletion cancelled", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                };
+
+                //Assigns button and OnClickListener for the AlertDialog and displays the AlertDialog
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", dialogOnClickListener);
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", dialogOnClickListener);
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
             }
         });
 

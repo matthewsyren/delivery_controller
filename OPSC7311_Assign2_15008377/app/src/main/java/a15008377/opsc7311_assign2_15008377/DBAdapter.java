@@ -1,7 +1,9 @@
 package a15008377.opsc7311_assign2_15008377;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,22 +33,22 @@ public class DBAdapter {
     static final String KEY_CLIENT_ADDRESS = "client_address";
     static final String KEY_CLIENT_LATITUDE = "client_latitude";
     static final String KEY_CLIENT_LONGITUDE = "client_longitude";
-    static final String DATABASE_CLIENT_CREATE = "create table clients (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_CLIENT_ID + " text unique not null, " + KEY_CLIENT_NAME + " text not null, " + KEY_CLIENT_EMAIL + " text not null, " + KEY_CLIENT_ADDRESS + " text not null, " + KEY_CLIENT_LATITUDE + " decimal(9, 6) not null, " + KEY_CLIENT_LONGITUDE + " decimal(9,6) not null);";
+    static final String DATABASE_CLIENT_CREATE = "create table " + DATABASE_CLIENT_TABLE + " (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_CLIENT_ID + " text unique not null, " + KEY_CLIENT_NAME + " text not null, " + KEY_CLIENT_EMAIL + " text not null, " + KEY_CLIENT_ADDRESS + " text not null, " + KEY_CLIENT_LATITUDE + " decimal(10, 7) not null, " + KEY_CLIENT_LONGITUDE + " decimal(9,6) not null);";
 
     //Delivery table declarations
     static final String KEY_DELIVERY_ID = "delivery_id";
     static final String KEY_DELIVERY_CLIENT_ID = "delivery_client_id";
     static final String KEY_DELIVERY_DATE = "delivery_date";
     static final String KEY_DELIVERY_COMPLETED = "delivery_completed";
-    static final String DATABASE_DELIVERY_CREATE = "create table deliveries (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_DELIVERY_ID + " text unique not null, " + KEY_DELIVERY_CLIENT_ID + " text not null, " + KEY_DELIVERY_DATE + " text not null, " + KEY_DELIVERY_COMPLETED + " int not null);";
+    static final String DATABASE_DELIVERY_CREATE = "create table " + DATABASE_DELIVERY_TABLE + "(" + KEY_ROWID + " integer primary key autoincrement, " + KEY_DELIVERY_ID + " text unique not null, " + KEY_DELIVERY_CLIENT_ID + " text not null, " + KEY_DELIVERY_DATE + " text not null, " + KEY_DELIVERY_COMPLETED + " int not null);";
 
     //Delivery_Item table declarations
     static final String KEY_DELIVERY_ITEM_ID = "delivery_item_id";
     static final String KEY_DELIVERY_ITEM_QUANTITY = "delivery_item_quantity";
-    static final String DATABASE_DELIVERY_ITEM_CREATE = "create table delivery_items (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_DELIVERY_ID + " text not null, " + KEY_DELIVERY_ITEM_ID + " text not null, " + KEY_DELIVERY_ITEM_QUANTITY + " int not null);";
+    static final String DATABASE_DELIVERY_ITEM_CREATE = "create table " + DATABASE_DELIVERY_ITEM_TABLE + " (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_DELIVERY_ID + " text not null, " + KEY_DELIVERY_ITEM_ID + " text not null, " + KEY_DELIVERY_ITEM_QUANTITY + " int not null);";
 
     //Other Declarations
-    final Context context;
+    Context context;
     DatabaseHelper dbHelper;
     SQLiteDatabase sqLiteDatabase;
 

@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -129,6 +130,9 @@ public class DeliveryActivity extends AppCompatActivity {
             //Sets the adapter for the spinner
             adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_row, lstItems);
             spinner.setAdapter(adapter);
+        }
+        catch(FileNotFoundException fnf){
+            Toast.makeText(getApplicationContext(), "There is currently no Stock information on this app. Please go to Stock control to add Stock before trying to schedule a Delivery", Toast.LENGTH_LONG).show();
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();

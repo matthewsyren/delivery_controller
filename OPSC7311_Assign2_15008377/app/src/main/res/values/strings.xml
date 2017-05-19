@@ -62,6 +62,11 @@
     <string name="button_increment_delivery_item">+</string>
     <string name="button_decrement_delivery_item">-</string>
     <string name="title_activity_completed_delivery">CompletedDeliveryActivity</string>
+    <string name="title_activity_stock">Stock Control</string>
+    <string name="title_activity_client">Client Control</string>
+    <string name="title_activity_delivery">Delivery Control</string>
+
+
 
     <!-- CompletedDeliveryActivity -->
     <string name="text_completed_delivery_heading">Completed Deliveries</string>

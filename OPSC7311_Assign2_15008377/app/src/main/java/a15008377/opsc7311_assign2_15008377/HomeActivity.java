@@ -41,7 +41,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
         DBAdapter dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         Cursor deliveryCursor = dbAdapter.getAllDeliveries();
-        ArrayList<LatLng> lstMarkers = new ArrayList<>();
+        final ArrayList<LatLng> lstMarkers = new ArrayList<>();
         ArrayList<String> lstMarkerTitles = new ArrayList<>();
 
         //Displays Markers for Deliveries if the user has created any Deliveries
@@ -73,15 +73,20 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
                 @Override
                 public void onGlobalLayout() {
                     try{
-                        LatLngBounds bounds = builder.build();
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                        if(lstMarkers.size() != 0){
+                            LatLngBounds bounds = builder.build();
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                        }
                     }
                     catch(IllegalStateException ise){
-                        Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), ise.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
         }
         dbAdapter.close();
     }

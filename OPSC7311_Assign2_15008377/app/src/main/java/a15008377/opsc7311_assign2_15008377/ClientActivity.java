@@ -1,8 +1,11 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -67,7 +70,7 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             client = new Client(clientID, clientName, clientEmail, clientAddress);
 
             //Calls the Google Maps API to determine whether the user has entered a valid address
-            if(client.validateClient(this)){
+            if(client.validateClient(this) && checkInternetConnection()){
                 if(action.equals("add") && !client.checkClientID(this)){
                     APIConnection api = new APIConnection();
                     api.delegate = this;
@@ -95,8 +98,6 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
                 client.setClientLongitude(location.getDouble("lng"));
                 Intent intent = null;
 
-                Toast.makeText(this, "Lat: " + client.getClientLatitude() + "\nLon: " + client.getClientLongitude(), Toast.LENGTH_LONG).show();
-
                 DBAdapter dbAdapter = new DBAdapter(this);
                 dbAdapter.open();
                 if(action.equals("add")){
@@ -119,5 +120,24 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    //Method checks the Internet connection, and returns true if there is an internet connection, and false if there is no internet connection
+    public boolean checkInternetConnection(){
+        boolean connected = true;
+        try{
+            ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            //Displays a message if there is no internet connection
+            if (!(networkInfo != null && networkInfo.isConnected())) {
+                Toast.makeText(getApplicationContext(), "Please check your internet connection...", Toast.LENGTH_SHORT).show();
+                connected = false;
+            }
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return connected;
     }
 }

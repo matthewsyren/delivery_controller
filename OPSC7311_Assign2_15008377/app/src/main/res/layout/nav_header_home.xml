@@ -14,24 +14,23 @@
     android:gravity="bottom"
     android:id="@+id/nav_layout">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/app_bar_text_size"
+        android:text="@string/app_name"
+        android:layout_gravity="center_horizontal"/>
+
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@android:drawable/sym_def_app_icon"
-        android:id="@+id/imageView" />
+        android:src="@mipmap/ic_app"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible"
+        android:layout_weight="0.5"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Android Studio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="android.studio@android.com"
-        android:id="@+id/textView" />
 
 </LinearLayout>

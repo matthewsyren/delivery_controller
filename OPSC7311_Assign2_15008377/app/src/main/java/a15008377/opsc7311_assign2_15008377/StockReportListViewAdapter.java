@@ -1,7 +1,9 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,19 +68,45 @@ public class StockReportListViewAdapter extends ArrayAdapter {
         btnDeleteStock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    String stockID = lstStock.get(position).getStockID();
-                    new Stock().deleteStockItem(stockID, context);
-                    lstStock.remove(position);
-                    DBAdapter dbAdapter = new DBAdapter(context);
-                    dbAdapter.open();
-                    dbAdapter.deleteDeliveryItemsByStockID(stockID);
-                    dbAdapter.close();
-                    notifyDataSetChanged();
-                }
-                catch(IOException ioe){
-                    Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_LONG).show();
-                }
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Are you sure you want to delete this Stock item?");
+
+                    //Creates OnClickListener for the Dialog message
+                    DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int button) {
+                            try {
+                                switch (button) {
+                                    //Checks if the username is valid (length > 0 and every character is an alphabetic character)
+                                    case AlertDialog.BUTTON_POSITIVE:
+                                        String stockID = lstStock.get(position).getStockID();
+                                        new Stock().deleteStockItem(stockID, context);
+                                        lstStock.remove(position);
+                                        DBAdapter dbAdapter = new DBAdapter(context);
+                                        dbAdapter.open();
+                                        dbAdapter.deleteDeliveryItemsByStockID(stockID);
+                                        dbAdapter.close();
+                                        notifyDataSetChanged();
+                                        break;
+                                    case AlertDialog.BUTTON_NEGATIVE:
+                                        Toast.makeText(context, "Deletion cancelled", Toast.LENGTH_LONG).show();
+                                        break;
+                                }
+                            }
+                            catch(IOException ioe){
+                                Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    };
+
+                    //Assigns button and OnClickListener for the AlertDialog and displays the AlertDialog
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", dialogOnClickListener);
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", dialogOnClickListener);
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+
+
             }
         });
 

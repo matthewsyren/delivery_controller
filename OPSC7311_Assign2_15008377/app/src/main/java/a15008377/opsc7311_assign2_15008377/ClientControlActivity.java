@@ -92,7 +92,12 @@ public class ClientControlActivity extends BaseActivity{
             }
             db.close();
 
-            displayClients(lstClients);
+            if(lstClients.size() > 0){
+                displayClients(lstClients);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "There are no currently no Clients added", Toast.LENGTH_LONG).show();
+            }
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -102,20 +107,25 @@ public class ClientControlActivity extends BaseActivity{
     //Method populates the ListView with the client data stored in the database
     public void displayClients(final ArrayList<Client> lstClients){
         try{
-            //Sets the ListViewAdapter for list_view_clients
-            ClientReportListViewAdapter adapter = new ClientReportListViewAdapter(this, lstClients);
-            ListView listView = (ListView) findViewById(R.id.list_view_clients);
-            listView.setAdapter(adapter);
+            if(lstClients.size() > 0){
+                //Sets the ListViewAdapter for list_view_clients
+                ClientReportListViewAdapter adapter = new ClientReportListViewAdapter(this, lstClients);
+                ListView listView = (ListView) findViewById(R.id.list_view_clients);
+                listView.setAdapter(adapter);
 
-            //Sets an OnItemClickListener on the ListView, which will take the user to the ClientActivity, where the user will be able to update information about the Clients
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
-                    Intent intent = new Intent(ClientControlActivity.this, ClientActivity.class);
-                    intent.putExtra("action", "update");
-                    intent.putExtra("clientObject", lstClients.get(pos));
-                    startActivity(intent);
-                }
-            });
+                //Sets an OnItemClickListener on the ListView, which will take the user to the ClientActivity, where the user will be able to update information about the Clients
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
+                        Intent intent = new Intent(ClientControlActivity.this, ClientActivity.class);
+                        intent.putExtra("action", "update");
+                        intent.putExtra("clientObject", lstClients.get(pos));
+                        startActivity(intent);
+                    }
+                });
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "There are no currently no Clients added", Toast.LENGTH_LONG).show();
+            }
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();

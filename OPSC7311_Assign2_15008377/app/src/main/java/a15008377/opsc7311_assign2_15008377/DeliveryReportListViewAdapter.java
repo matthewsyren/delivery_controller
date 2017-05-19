@@ -1,7 +1,9 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +61,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         txtDeliveryID.setText("Delivery ID: " + lstDeliveries.get(position).getDeliveryID());
         txtDeliveryClientID.setText("Client ID: " + lstDeliveries.get(position).getDeliveryClientID());
         txtDeliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
-        txtDeliveryComplete.setText("Delivery Complete: " + lstDeliveries.get(position).getDeliveryComplete() + "\n\n");
+        txtDeliveryComplete.setText("Delivery Complete: " + (lstDeliveries.get(position).getDeliveryComplete() == 0 ? "No" : "Yes") + "\n\n");
 
         final ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();
         String itemText = "Delivery Items: \n";
@@ -76,20 +78,43 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
             btnDeleteDelivery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DBAdapter dbAdapter = new DBAdapter(context);
-                    dbAdapter.open();
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Are you sure you want to delete this Delivery?");
 
-                    String deliveryID = lstDeliveries.get(position).getDeliveryID();
+                    //Creates OnClickListener for the Dialog message
+                    DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int button) {
+                            switch(button){
+                                //Checks if the username is valid (length > 0 and every character is an alphabetic character)
+                                case AlertDialog.BUTTON_POSITIVE:
+                                    DBAdapter dbAdapter = new DBAdapter(context);
+                                    dbAdapter.open();
 
-                    //Deletes the Delivery and all DeliveryItems for that Delivery
-                    if(dbAdapter.deleteDelivery(deliveryID)){
-                        dbAdapter.deleteDeliveryItems(deliveryID);
-                        addItemsBackToStock(lstDeliveries.get(position));
-                        lstDeliveries.remove(position);
-                        Toast.makeText(context, "Delivery successfully deleted", Toast.LENGTH_LONG).show();
-                        notifyDataSetChanged();
-                    }
-                    dbAdapter.close();
+                                    String deliveryID = lstDeliveries.get(position).getDeliveryID();
+
+                                    //Deletes the Delivery and all DeliveryItems for that Delivery
+                                    if(dbAdapter.deleteDelivery(deliveryID)){
+                                        dbAdapter.deleteDeliveryItems(deliveryID);
+                                        addItemsBackToStock(lstDeliveries.get(position));
+                                        lstDeliveries.remove(position);
+                                        Toast.makeText(context, "Delivery successfully deleted", Toast.LENGTH_LONG).show();
+                                        notifyDataSetChanged();
+                                    }
+                                    dbAdapter.close();
+                                    break;
+                                case AlertDialog.BUTTON_NEGATIVE:
+                                    Toast.makeText(context, "Deletion cancelled", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    };
+
+                    //Assigns button and OnClickListener for the AlertDialog and displays the AlertDialog
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", dialogOnClickListener);
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", dialogOnClickListener);
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
                 }
             });
 

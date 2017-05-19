@@ -35,7 +35,7 @@ public class StockControlActivity extends BaseActivity {
                     searchStock(searchTerm);
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    Toast.makeText(getApplicationContext(), "Search complete " + searchTerm + "!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 return false;
@@ -65,6 +65,9 @@ public class StockControlActivity extends BaseActivity {
 
             displayStock(lstStock);
         }
+        catch(IOException ioe){
+            Toast.makeText(getApplicationContext(), "There are currently no Stock items added", Toast.LENGTH_LONG).show();
+        }
         catch(Exception exc){
             Toast.makeText(getBaseContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -77,7 +80,7 @@ public class StockControlActivity extends BaseActivity {
             displayStock(lstStock);
         }
         catch(IOException ioe){
-            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "There are currently no Stock items added", Toast.LENGTH_LONG).show();
         }
     }
 

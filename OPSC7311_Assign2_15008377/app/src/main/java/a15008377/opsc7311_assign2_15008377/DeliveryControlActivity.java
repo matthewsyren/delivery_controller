@@ -80,37 +80,46 @@ public class DeliveryControlActivity extends BaseActivity {
 
     //Method populates the ListView on this Activity
     public void displayDeliveries(final ArrayList<Delivery> lstDeliveries){
-        DBAdapter dbAdapter = new DBAdapter(this);
-        dbAdapter.open();
 
-        //Loops through Cursor and adds each Delivery item to the lstDeliveries ArrayList
-        for(int i = 0; i < lstDeliveries.size(); i++) {
-            Cursor deliveryItems = dbAdapter.getDeliveryItems(lstDeliveries.get(i).getDeliveryID());
-            ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
-            if(deliveryItems.moveToFirst()){
-                do{
-                    DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
-                    lstDeliveryItems.add(deliveryItem);
-                }while(deliveryItems.moveToNext());
-                lstDeliveries.get(i).setLstDeliveryItems(lstDeliveryItems);
+
+        if(lstDeliveries.size() > 0){
+            DBAdapter dbAdapter = new DBAdapter(this);
+            dbAdapter.open();
+
+            //Loops through Cursor and adds each Delivery item to the lstDeliveries ArrayList
+            for(int i = 0; i < lstDeliveries.size(); i++) {
+                Cursor deliveryItems = dbAdapter.getDeliveryItems(lstDeliveries.get(i).getDeliveryID());
+                ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+                if(deliveryItems.moveToFirst()){
+                    do{
+                        DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
+                        lstDeliveryItems.add(deliveryItem);
+                    }while(deliveryItems.moveToNext());
+                    lstDeliveries.get(i).setLstDeliveryItems(lstDeliveryItems);
+                }
             }
+
+            //Sets the Adapter for the list_view_deliveries ListView
+            DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
+            final ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
+            listView.setAdapter(adapter);
+
+            //Sets OnItemClickListener, which will pass the information of the Delivery clicked to the DeliveryActivity
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
+                    intent.putExtra("action", "update");
+                    intent.putExtra("deliveryObject", lstDeliveries.get(position));
+                    startActivity(intent);
+                }
+            });
+            dbAdapter.close();
         }
-        //Sets the Adapter for the list_view_deliveries ListView
-        DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
-        final ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
-        listView.setAdapter(adapter);
+        else{
+            Toast.makeText(getApplicationContext(), "There are no currently no Deliveries added", Toast.LENGTH_LONG).show();
+        }
 
-        //Sets OnItemClickListener, which will pass the information of the Delivery clicked to the DeliveryActivity
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
-                intent.putExtra("action", "update");
-                intent.putExtra("deliveryObject", lstDeliveries.get(position));
-                startActivity(intent);
-            }
-        });
-        dbAdapter.close();
     }
 
     //Method takes the user to the DeliveryActivity
