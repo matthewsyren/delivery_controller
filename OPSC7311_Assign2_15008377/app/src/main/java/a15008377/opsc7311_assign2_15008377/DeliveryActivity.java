@@ -238,7 +238,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 //Writes the delivery details to the database if the information is valid
                 if(delivery.validateDelivery(this)){
-                    if(action.equals("add")){
+                    if(action.equals("add") && !delivery.checkDeliveryID(this)){
                         dbAdapter.insertDelivery(delivery);
                         Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
                         dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());

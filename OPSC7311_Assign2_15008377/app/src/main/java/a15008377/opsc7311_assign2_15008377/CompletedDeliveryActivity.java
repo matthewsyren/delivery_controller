@@ -23,35 +23,45 @@ public class CompletedDeliveryActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_completed_delivery);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_completed_delivery);
 
-        //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
-        super.onCreateDrawer();
-        super.setSelectedNavItem(R.id.nav_completed_deliveries);
+            //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
+            super.onCreateDrawer();
+            super.setSelectedNavItem(R.id.nav_completed_deliveries);
 
-        //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
-        final EditText txtSearchDelivery = (EditText) findViewById(R.id.text_search_delivery);
-        txtSearchDelivery.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                    String searchTerm = txtSearchDelivery.getText().toString();
-                    searchDeliveries(searchTerm);
-                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
-                    return true;
+            //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+            final EditText txtSearchDelivery = (EditText) findViewById(R.id.text_search_delivery);
+            txtSearchDelivery.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if(keyCode == KeyEvent.KEYCODE_ENTER){
+                        String searchTerm = txtSearchDelivery.getText().toString();
+                        searchDeliveries(searchTerm);
+                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        populateViews();
+            });
+            populateViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method populates the views that are displayed on this Activity
     public void populateViews(){
-        getCompleteDeliveries();
+        try{
+            getCompleteDeliveries();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method fetches the Deliveries that match the search result and send them to the displayDeliveries method
@@ -108,7 +118,7 @@ public class CompletedDeliveryActivity extends BaseActivity {
             }
         }
         catch(Exception exc){
-            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

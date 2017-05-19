@@ -25,38 +25,49 @@ import java.io.IOException;
 public class ClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
     Client client;
     String action;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_client);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_add_client);
 
-        Bundle bundle = getIntent().getExtras();
-        action = bundle.getString("action");
-        if(action.equals("update")){
-            EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
-            txtClientID.setEnabled(false);
-            Button button = (Button) findViewById(R.id.button_add_client);
-            button.setText("Update Client");
-            Client client = (Client) bundle.getSerializable("clientObject");
-            displayData(client);
+            Bundle bundle = getIntent().getExtras();
+            action = bundle.getString("action");
+            if(action.equals("update")){
+                EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
+                txtClientID.setEnabled(false);
+                Button button = (Button) findViewById(R.id.button_add_client);
+                button.setText("Update Client");
+                Client client = (Client) bundle.getSerializable("clientObject");
+                displayData(client);
+            }
+            else if(action.equals("add")){
+                Button button = (Button) findViewById(R.id.button_add_client);
+                button.setText("Add Client");
+            }
         }
-        else if(action.equals("add")){
-            Button button = (Button) findViewById(R.id.button_add_client);
-            button.setText("Add Client");
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     //Method pre-populates the TextViews on this Activity with the data from the Client item that was clicked on in the previous Activity and sent through the bundle
     public void displayData(Client client){
-        EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
-        EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
-        EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
-        EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
+        try{
+            EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
+            EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
+            EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
+            EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
 
-        txtClientID.setText(client.getClientID());
-        txtClientName.setText(client.getClientName());
-        txtClientEmail.setText(client.getClientEmail());
-        txtClientAddress.setText(client.getClientAddress());
+            txtClientID.setText(client.getClientID());
+            txtClientName.setText(client.getClientName());
+            txtClientEmail.setText(client.getClientEmail());
+            txtClientAddress.setText(client.getClientAddress());
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method stores the entered data for the client in the database
@@ -92,6 +103,9 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
         catch (IOException ioe){
             Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method reads the data returned from the Google Maps API (the coordinates if the address entered by the user) and determines whether the user has entered a valid address
@@ -106,6 +120,8 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
 
                 DBAdapter dbAdapter = new DBAdapter(this);
                 dbAdapter.open();
+
+                //Performs appropriate action based on whether the user is adding or updating information
                 if(action.equals("add")){
                     if(dbAdapter.insertClient(client) >= 0){
                         Toast.makeText(getApplicationContext(), "Client successfully added", Toast.LENGTH_LONG).show();
@@ -137,12 +153,12 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
 
             //Displays a message if there is no internet connection
             if (!(networkInfo != null && networkInfo.isConnected())) {
-                Toast.makeText(getApplicationContext(), "Please check your internet connection...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please check your internet connection...", Toast.LENGTH_LONG).show();
                 connected = false;
             }
         }
         catch(Exception exc){
-            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
         return connected;
     }

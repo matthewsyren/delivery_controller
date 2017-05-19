@@ -25,42 +25,57 @@ public class DeliveryControlActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delivery_control);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_delivery_control);
 
-        //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
-        super.onCreateDrawer();
-        super.setSelectedNavItem(R.id.nav_delivery_control);
+            //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
+            super.onCreateDrawer();
+            super.setSelectedNavItem(R.id.nav_delivery_control);
 
-        //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
-        final EditText txtSearchDelivery = (EditText) findViewById(R.id.text_search_delivery);
-        txtSearchDelivery.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                    String searchTerm = txtSearchDelivery.getText().toString();
-                    searchDeliveries(searchTerm);
-                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
-                    return true;
+            //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+            final EditText txtSearchDelivery = (EditText) findViewById(R.id.text_search_delivery);
+            txtSearchDelivery.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if(keyCode == KeyEvent.KEYCODE_ENTER){
+                        String searchTerm = txtSearchDelivery.getText().toString();
+                        searchDeliveries(searchTerm);
+                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        populateViews();
+            });
+            populateViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Repopulates the views when the Activity is resumed
     @Override
     public void onResume(){
-        super.onResume();
-        populateViews();
+        try{
+            super.onResume();
+            populateViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method populates the views that are displayed on this Activity
     public void populateViews(){
-        getIncompleteDeliveries();
+        try{
+            getIncompleteDeliveries();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method fetches the Deliveries that match the search result and send them to the displayDeliveries method
@@ -87,46 +102,48 @@ public class DeliveryControlActivity extends BaseActivity {
 
     //Method populates the ListView on this Activity
     public void displayDeliveries(final ArrayList<Delivery> lstDeliveries){
+        try{
+            if(lstDeliveries.size() > 0){
+                DBAdapter dbAdapter = new DBAdapter(this);
+                dbAdapter.open();
 
-
-        if(lstDeliveries.size() > 0){
-            DBAdapter dbAdapter = new DBAdapter(this);
-            dbAdapter.open();
-
-            //Loops through Cursor and adds each Delivery item to the lstDeliveries ArrayList
-            for(int i = 0; i < lstDeliveries.size(); i++) {
-                Cursor deliveryItems = dbAdapter.getDeliveryItems(lstDeliveries.get(i).getDeliveryID());
-                ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
-                if(deliveryItems.moveToFirst()){
-                    do{
-                        DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
-                        lstDeliveryItems.add(deliveryItem);
-                    }while(deliveryItems.moveToNext());
-                    lstDeliveries.get(i).setLstDeliveryItems(lstDeliveryItems);
+                //Loops through Cursor and adds each Delivery item to the lstDeliveries ArrayList
+                for(int i = 0; i < lstDeliveries.size(); i++) {
+                    Cursor deliveryItems = dbAdapter.getDeliveryItems(lstDeliveries.get(i).getDeliveryID());
+                    ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+                    if(deliveryItems.moveToFirst()){
+                        do{
+                            DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
+                            lstDeliveryItems.add(deliveryItem);
+                        }while(deliveryItems.moveToNext());
+                        lstDeliveries.get(i).setLstDeliveryItems(lstDeliveryItems);
+                    }
                 }
+
+                //Sets the Adapter for the list_view_deliveries ListView
+                DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
+                final ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
+                listView.setAdapter(adapter);
+
+                //Sets OnItemClickListener, which will pass the information of the Delivery clicked to the DeliveryActivity
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
+                        intent.putExtra("action", "update");
+                        intent.putExtra("deliveryObject", lstDeliveries.get(position));
+                        startActivity(intent);
+                    }
+                });
+                dbAdapter.close();
             }
-
-            //Sets the Adapter for the list_view_deliveries ListView
-            DeliveryReportListViewAdapter adapter = new DeliveryReportListViewAdapter(this, lstDeliveries);
-            final ListView listView = (ListView) findViewById(R.id.list_view_deliveries);
-            listView.setAdapter(adapter);
-
-            //Sets OnItemClickListener, which will pass the information of the Delivery clicked to the DeliveryActivity
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(DeliveryControlActivity.this, DeliveryActivity.class);
-                    intent.putExtra("action", "update");
-                    intent.putExtra("deliveryObject", lstDeliveries.get(position));
-                    startActivity(intent);
-                }
-            });
-            dbAdapter.close();
+            else{
+                Toast.makeText(getApplicationContext(), "There are no currently no Deliveries added", Toast.LENGTH_LONG).show();
+            }
         }
-        else{
-            Toast.makeText(getApplicationContext(), "There are no currently no Deliveries added", Toast.LENGTH_LONG).show();
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
-
     }
 
     //Method takes the user to the DeliveryActivity

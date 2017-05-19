@@ -25,38 +25,48 @@ public class StockControlActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_control);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_stock_control);
 
-        //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
-        super.onCreateDrawer();
-        super.setSelectedNavItem(R.id.nav_stock_control);
+            //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
+            super.onCreateDrawer();
+            super.setSelectedNavItem(R.id.nav_stock_control);
 
-        //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
-        final EditText txtSearchStock = (EditText) findViewById(R.id.text_search_stock);
-        txtSearchStock.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                    String searchTerm = txtSearchStock.getText().toString();
-                    searchStock(searchTerm);
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
-                    return true;
+            //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+            final EditText txtSearchStock = (EditText) findViewById(R.id.text_search_stock);
+            txtSearchStock.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if(keyCode == KeyEvent.KEYCODE_ENTER){
+                        String searchTerm = txtSearchStock.getText().toString();
+                        searchStock(searchTerm);
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        //Method populates the Stock report
-        populateViews();
+            //Method populates the Stock report
+            populateViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onResume(){
-        super.onResume();
-        populateViews();
+        try{
+            super.onResume();
+            populateViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method fetches all Stock items that match the search and sends them to the displayStock method
@@ -116,8 +126,13 @@ public class StockControlActivity extends BaseActivity {
 
     //Method calls the StockActivity
     public void addStockOnClick(View view){
-        Intent intent = new Intent(StockControlActivity.this, StockActivity.class);
-        intent.putExtra("action", "add");
-        startActivity(intent);
+        try{
+            Intent intent = new Intent(StockControlActivity.this, StockActivity.class);
+            intent.putExtra("action", "add");
+            startActivity(intent);
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

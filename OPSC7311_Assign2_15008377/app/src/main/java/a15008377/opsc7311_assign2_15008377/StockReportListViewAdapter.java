@@ -28,8 +28,7 @@ public class StockReportListViewAdapter extends ArrayAdapter {
     private ArrayList<Stock> lstStock;
 
     //Constructor
-    public StockReportListViewAdapter(Context context, ArrayList<Stock> stock)
-    {
+    public StockReportListViewAdapter(Context context, ArrayList<Stock> stock) {
         super(context, R.layout.list_view_row_stock_report, stock);
         this.context = context;
         lstStock = stock;
@@ -37,8 +36,7 @@ public class StockReportListViewAdapter extends ArrayAdapter {
 
     //Method populates the appropriate Views with the appropriate data (stored in the shows ArrayList)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         //View declarations
         TextView txtStockID;
         TextView txtStockDescription;
@@ -101,8 +99,6 @@ public class StockReportListViewAdapter extends ArrayAdapter {
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", dialogOnClickListener);
                     alertDialog.setCanceledOnTouchOutside(false);
                     alertDialog.show();
-
-
             }
         });
 

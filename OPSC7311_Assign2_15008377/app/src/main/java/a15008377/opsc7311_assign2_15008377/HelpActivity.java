@@ -9,16 +9,22 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class HelpActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_help);
 
-        //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
-        super.onCreateDrawer();
-        super.setSelectedNavItem(R.id.nav_help);
+            //Sets the NavigationDrawer for the Activity and sets the selected item in the NavigationDrawer to Home
+            super.onCreateDrawer();
+            super.setSelectedNavItem(R.id.nav_help);
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -174,7 +174,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
             new Stock().rewriteFile(lstStock, context);
         }
         catch(IOException ioe){
-            Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

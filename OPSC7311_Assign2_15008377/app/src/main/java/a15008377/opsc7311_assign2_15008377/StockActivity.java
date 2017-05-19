@@ -25,34 +25,44 @@ public class StockActivity extends AppCompatActivity {
     String action;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_stock);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_add_stock);
 
-        Bundle bundle = getIntent().getExtras();
-        action = bundle.getString("action");
-        if(action.equals("update")){
-            EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
-            txtStockID.setEnabled(false);
-            Button button = (Button) findViewById(R.id.button_add_stock);
-            button.setText("Update Stock");
-            Stock stock = (Stock) bundle.getSerializable("stockObject");
-            displayData(stock);
+            Bundle bundle = getIntent().getExtras();
+            action = bundle.getString("action");
+            if(action.equals("update")){
+                EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
+                txtStockID.setEnabled(false);
+                Button button = (Button) findViewById(R.id.button_add_stock);
+                button.setText("Update Stock");
+                Stock stock = (Stock) bundle.getSerializable("stockObject");
+                displayData(stock);
+            }
+            else if(action.equals("add")){
+                Button button = (Button) findViewById(R.id.button_add_stock);
+                button.setText("Add Stock");
+            }
         }
-        else if(action.equals("add")){
-            Button button = (Button) findViewById(R.id.button_add_stock);
-            button.setText("Add Stock");
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     //Method pre-populates the TextViews on this Activity with the data from the Stock item that was clicked on in the previous Activity and sent through the bundle
     public void displayData(Stock stock){
-        EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
-        EditText txtStockDescription = (EditText) findViewById(R.id.text_stock_description);
-        EditText txtStockQuantity = (EditText) findViewById(R.id.text_stock_quantity);
+        try{
+            EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
+            EditText txtStockDescription = (EditText) findViewById(R.id.text_stock_description);
+            EditText txtStockQuantity = (EditText) findViewById(R.id.text_stock_quantity);
 
-        txtStockID.setText(stock.getStockID());
-        txtStockDescription.setText(stock.getStockDescription());
-        txtStockQuantity.setText(stock.getStockQuantity() + "");
+            txtStockID.setText(stock.getStockID());
+            txtStockDescription.setText(stock.getStockDescription());
+            txtStockQuantity.setText(stock.getStockQuantity() + "");
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void addStockOnClick(View view) {
@@ -99,16 +109,27 @@ public class StockActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please enter a whole number for the Stock Quantity", Toast.LENGTH_LONG).show();
         }
         catch(IOException ioe){
-            ioe.printStackTrace();
+            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     //Method writes the stock information to the Stock.txt file
-    public void writeToFile(String stockID, String stockDescription, int stockQuantity) throws IOException{
-        File file = new File(getFilesDir(), "Stock.txt");
-        FileOutputStream fileOutputStream = openFileOutput(file.getName(), MODE_APPEND);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-        outputStreamWriter.write(stockID + "|" + stockDescription + "|" + stockQuantity + "\n");
-        outputStreamWriter.close();
+    public void writeToFile(String stockID, String stockDescription, int stockQuantity){
+        try{
+            File file = new File(getFilesDir(), "Stock.txt");
+            FileOutputStream fileOutputStream = openFileOutput(file.getName(), MODE_APPEND);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            outputStreamWriter.write(stockID + "|" + stockDescription + "|" + stockQuantity + "\n");
+            outputStreamWriter.close();
+        }
+        catch(IOException ioe){
+            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

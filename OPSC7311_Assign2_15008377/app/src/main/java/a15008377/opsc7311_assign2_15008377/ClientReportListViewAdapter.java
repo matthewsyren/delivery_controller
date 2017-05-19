@@ -27,8 +27,7 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
     private ArrayList<Client> lstClients;
 
     //Constructor
-    public ClientReportListViewAdapter(Context context, ArrayList<Client> lstClients)
-    {
+    public ClientReportListViewAdapter(Context context, ArrayList<Client> lstClients) {
         super(context, R.layout.list_view_row_client_report, lstClients);
         this.context = context;
         this.lstClients = lstClients;
@@ -36,8 +35,7 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
 
     //Method populates the appropriate Views with the appropriate data (stored in the shows ArrayList)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         //View declarations
         TextView txtClientID;
         TextView txtClientName;
