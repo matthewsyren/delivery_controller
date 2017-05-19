@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays a report of all Stock items in the Stock.txt text file
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
@@ -10,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.ArrayList;
 

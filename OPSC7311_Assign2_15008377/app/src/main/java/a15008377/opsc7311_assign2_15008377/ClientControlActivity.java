@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class shows a report of the Clients that are stored in the database
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;

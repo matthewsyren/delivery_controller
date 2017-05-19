@@ -1,11 +1,15 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays Deliveries for the current date on a map using Google Maps Markers
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
-import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -16,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 

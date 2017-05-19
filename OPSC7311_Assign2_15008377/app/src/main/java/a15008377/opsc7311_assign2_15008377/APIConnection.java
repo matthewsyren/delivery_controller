@@ -1,3 +1,12 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class connects to a web page specified in the URL that is passed in, and sends the response from
+ *              that website to the getJsonResponse method in the delegate class
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.os.AsyncTask;
@@ -7,20 +16,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by matthew on 2017/02/03.
- * Class fetches JSON returned from the appropriate API in an AsyncTask
- */
-
 public class APIConnection extends AsyncTask<String, Void, String> {
 
-    //Declares an object of the IAPIConnectionResponse interface, which will be used to send the JSON back to the  thread
+    //Declares an object of the IAPIConnectionResponse interface, which will be used to send the JSON back to the main thread
     public IAPIConnectionResponse delegate = null;
-
-    protected void onPreExecute() {
-        //progressBar.setVisibility(View.VISIBLE);
-        //responseView.setText("");
-    }
 
     //Method retrieves the JSON returned from the API
     protected String doInBackground(String... urls) {
@@ -30,6 +29,7 @@ public class APIConnection extends AsyncTask<String, Void, String> {
                 BufferedReader bufferedReader = null;
                 StringBuilder stringBuilder = new StringBuilder();
 
+                //Saves the response to a StringBuilder object
                 for(int i = 0; i < urls.length; i++){
                     URL url = new URL(urls[i]);
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -58,7 +58,7 @@ public class APIConnection extends AsyncTask<String, Void, String> {
         }
     }
 
-    //Method passes the JSON back to the Main thread (to the point from which this class was instantiated)
+    //Method passes the JSON back to the Main thread (to the class from which this class was instantiated)
     protected void onPostExecute(String response) {
         if(delegate != null){
             delegate.getJsonResponse(response);

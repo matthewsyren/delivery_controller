@@ -1,24 +1,27 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class allows you to add or update Stock information
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class StockActivity extends AppCompatActivity {
-    Stock stock;
     String action;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,4 @@ public class StockActivity extends AppCompatActivity {
         outputStreamWriter.write(stockID + "|" + stockDescription + "|" + stockQuantity + "\n");
         outputStreamWriter.close();
     }
-
-
 }

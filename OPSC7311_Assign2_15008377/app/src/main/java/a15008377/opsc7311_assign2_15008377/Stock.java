@@ -1,13 +1,18 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class provides a template for a Stock object
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,12 +20,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import static android.content.Context.MODE_APPEND;
 
-/**
- * Created by Matthew Syrén on 2017/05/09.
- */
 
 public class Stock implements Serializable{
     //Declarations

@@ -1,30 +1,26 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays Stock object information in the appropriate ListView
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.io.IOError;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ListResourceBundle;
-
-/**
- * Created by Matthew Syrén on 2017/05/10.
- */
 
 public class StockReportListViewAdapter extends ArrayAdapter {
     //Declarations

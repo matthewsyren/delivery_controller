@@ -1,10 +1,14 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class provides a template for a DeliveryItem object
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import java.io.Serializable;
-
-/**
- * Created by Matthew Syrén on 2017/05/14.
- */
 
 public class DeliveryItem implements Serializable{
     //Declarations

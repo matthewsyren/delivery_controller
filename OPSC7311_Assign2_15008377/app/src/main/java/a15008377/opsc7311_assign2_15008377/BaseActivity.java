@@ -1,25 +1,24 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class provides the basis for the NavigationDrawer. The NavigationDrawer's processing is completed
+ *              here, meaning any class that extends this class will have ful NavigationDrawer functionality
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-
-/**
- * Created by matthew on 2017/02/04.
- * Class provides a base for the NavigationDrawer that is shared amongst the activities
- */
 
 public class BaseActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -104,6 +103,9 @@ public class BaseActivity extends FragmentActivity
         }
         else if(id == R.id.nav_completed_deliveries){
             startActivity(new Intent(getApplicationContext(), CompletedDeliveryActivity.class));
+        }
+        else if(id == R.id.nav_help){
+            startActivity(new Intent(getApplicationContext(), HelpActivity.class));
         }
 
         //Closes the NavigationDrawer once the action has been completed

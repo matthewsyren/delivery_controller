@@ -1,17 +1,21 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class provides a template for a Delivery object
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by Matthew Syrén on 2017/05/13.
- */
 
 public class Delivery implements Serializable {
     //Declarations

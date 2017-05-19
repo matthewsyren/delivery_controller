@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays the Client information in the appropriate ListView
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
@@ -9,17 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-/**
- * Created by Matthew Syrén on 2017/05/12.
- */
 
 public class ClientReportListViewAdapter extends ArrayAdapter{
     //Declarations

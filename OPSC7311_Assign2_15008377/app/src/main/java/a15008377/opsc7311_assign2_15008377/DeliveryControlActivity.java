@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays a report of all incomplete Deliveries
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
@@ -11,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public class DeliveryControlActivity extends BaseActivity {

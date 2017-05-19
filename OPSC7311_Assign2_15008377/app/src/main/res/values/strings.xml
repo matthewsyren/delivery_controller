@@ -67,7 +67,10 @@
     <string name="title_activity_delivery">Delivery Control</string>
 
 
-
     <!-- CompletedDeliveryActivity -->
     <string name="text_completed_delivery_heading">Completed Deliveries</string>
+    <string name="title_activity_help">HelpActivity</string>
+
+    <!-- HelpActivity -->
+    <string name="text_help">This app allows you to keep track of Stock, Clients and Deliveries. There is a dedicated page for the control of each of these, and those can be accessed via the menu. \n\nIf you would like to add information, then open the menu and click on the appropriate control page, and then click on the circular + button near the bottom right corner. If you would like to update existing data, go to the approrpiate control page and click on the item in the list that is displayed. There is also a button to delete an item in the list that shows all items. Stock and Client items are both needed before scheduling a Delivery, so be sure to add those before trying to schedule a Delivery \n\nThe Home page will show a map with markers representing the destination of each of your Deliveries for the current date. You can click on one of the markers to see its information or to navigate to it using Google Maps</string>
 </resources>

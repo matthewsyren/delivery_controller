@@ -1,21 +1,25 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class is used to add and update Client information
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 
 public class ClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
@@ -58,6 +62,7 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
     //Method stores the entered data for the client in the database
     public void addClientOnClick(View view) {
         try{
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar) ;
             EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
             EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
             EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
@@ -68,6 +73,7 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             String clientEmail = txtClientEmail.getText().toString();
             String clientAddress = txtClientAddress.getText().toString();
             client = new Client(clientID, clientName, clientEmail, clientAddress);
+            progressBar.setVisibility(View.VISIBLE);
 
             //Calls the Google Maps API to determine whether the user has entered a valid address
             if(client.validateClient(this) && checkInternetConnection()){

@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class displays Delivery object information in the appropriate ListView
+ */
+
 package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
@@ -12,13 +20,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.ArrayList;
-
-/**
- * Created by Matthew Syrén on 2017/05/14.
- */
 
 public class DeliveryReportListViewAdapter extends ArrayAdapter {
     //Declarations

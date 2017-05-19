@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_app"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -32,10 +32,12 @@
             android:name=".StockControlActivity"
             android:label="@string/title_activity_stock_control"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StockActivity"
-            android:label="@string/title_activity_stock"/>
-        <activity android:name=".ClientActivity"
-            android:label="@string/title_activity_client"/>
+        <activity
+            android:name=".StockActivity"
+            android:label="@string/title_activity_stock" />
+        <activity
+            android:name=".ClientActivity"
+            android:label="@string/title_activity_client" />
         <activity
             android:name=".ClientControlActivity"
             android:label="@string/title_activity_client_control"
@@ -44,8 +46,9 @@
             android:name=".DeliveryControlActivity"
             android:label="@string/title_activity_delivery_control"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DeliveryActivity"
-            android:label="@string/title_activity_delivery"/>
+        <activity
+            android:name=".DeliveryActivity"
+            android:label="@string/title_activity_delivery" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,6 +64,10 @@
         <activity
             android:name=".CompletedDeliveryActivity"
             android:label="@string/title_activity_completed_delivery"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

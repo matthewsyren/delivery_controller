@@ -1,11 +1,14 @@
-package a15008377.opsc7311_assign2_15008377;
-
 /**
- * Created by matthew on 2017/02/03.
- * This class is used to parse the JSON returned from an API
+ * Author: Matthew Syrén
+ *
+ * Date:   19 May 2017
+ *
+ * Description: Class used to receive the response from the APIConnection class
  */
 
+package a15008377.opsc7311_assign2_15008377;
+
 public interface IAPIConnectionResponse {
-    //Method is used to get JSON from an API. The class that needs the data will implement this interface, and the APIConnection class sends the data to the method once it has fetched the data
+    //Method is used to parse JSON from an API. The class that needs the data will implement this interface, and the APIConnection class sends the data to the method once it has fetched the data
     public void getJsonResponse(String response);
 }
