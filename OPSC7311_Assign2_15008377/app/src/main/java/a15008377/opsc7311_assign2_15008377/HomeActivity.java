@@ -59,11 +59,14 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
             if(deliveryCursor.moveToFirst()){
                 final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+                //Loops through all Deliveries and adds the appropriate ones to lstMarkers
                 do{
                     String clientID = deliveryCursor.getString(1);
                     Client client = dbAdapter.getClient(clientID);
                     Calendar calendar = Calendar.getInstance();
                     String currentDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+
+                    //Adds Marker to lstMarkers if the Delivery is incomplete and scheduled for the current date
                     if(client != null && deliveryCursor.getInt(3) == 0 && deliveryCursor.getString(2).equals(currentDate)){
                         //Creates new Marker and title for Marker, and adds them to appropriate ArrayLists
                         LatLng clientLocation = new LatLng(client.getClientLatitude(), client.getClientLongitude());
@@ -84,20 +87,23 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
                     @Override
                     public void onGlobalLayout() {
                         try{
+                            //Displays Markers for today's Deliveries, otherwise outputs a message saying no Deliveries have been scheduled for the current date
                             if(lstMarkers.size() != 0){
                                 LatLngBounds bounds = builder.build();
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
                             }
                         }
                         catch(IllegalStateException ise){
                             Toast.makeText(getApplicationContext(), ise.getMessage(), Toast.LENGTH_LONG).show();
                         }
+
+                        //Removes OnGlobalLayoutListener to prevent recurrent animations on the map
                         layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
             }
             dbAdapter.close();
         }

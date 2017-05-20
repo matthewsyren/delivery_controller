@@ -39,8 +39,13 @@ public class CompletedDeliveryActivity extends BaseActivity {
                     if(keyCode == KeyEvent.KEYCODE_ENTER){
                         String searchTerm = txtSearchDelivery.getText().toString();
                         searchDeliveries(searchTerm);
+
+                        //Hides keyboard when search is completed
                         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+
+                        //Displays message to user
                         Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
                         return true;
                     }
@@ -102,6 +107,8 @@ public class CompletedDeliveryActivity extends BaseActivity {
                             DeliveryItem deliveryItem = new DeliveryItem(deliveryItems.getString(0), deliveryItems.getInt(1));
                             lstDeliveryItems.add(deliveryItem);
                         }while(deliveryItems.moveToNext());
+
+                        //Sets the DeliveryItems for the Delivery object
                         lstDeliveries.get(i).setLstDeliveryItems(lstDeliveryItems);
                     }
                 }

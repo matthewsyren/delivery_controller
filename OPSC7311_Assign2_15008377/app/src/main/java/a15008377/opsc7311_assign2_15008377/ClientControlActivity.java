@@ -42,8 +42,12 @@ public class ClientControlActivity extends BaseActivity{
                     if(keyCode == KeyEvent.KEYCODE_ENTER){
                         String searchTerm = txtSearchClient.getText().toString();
                         searchClients(searchTerm);
+
+                        //Hides keyboard one search is completed
                         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                        //Displays message to user
                         Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
                         return true;
                     }
@@ -59,6 +63,7 @@ public class ClientControlActivity extends BaseActivity{
         }
     }
 
+    //Repopulates the views when the Activity is resumed
     @Override
     public void onResume(){
         try{

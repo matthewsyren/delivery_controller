@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 
@@ -69,6 +71,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
                 //Decrements the quantity of the item by 1, and removes the item if the quantity is reduced to 0
                 lstDeliveryItems.get(position).setDeliveryItemQuantity(lstDeliveryItems.get(position).getDeliveryItemQuantity() - 1);
                 if(lstDeliveryItems.get(position).getDeliveryItemQuantity() == 0){
+                    Toast.makeText(context, lstDeliveryItems.get(position).getDeliveryStockID() + " removed from Delivery", Toast.LENGTH_LONG).show();
                     lstDeliveryItems.remove(position);
                 }
                 notifyDataSetChanged();
@@ -79,6 +82,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
             @Override
             public void onClick(View v) {
                 //Removes the item from the ListView
+                Toast.makeText(context, lstDeliveryItems.get(position).getDeliveryStockID() + " removed from Delivery", Toast.LENGTH_LONG).show();
                 lstDeliveryItems.remove(position);
                 notifyDataSetChanged();
             }
@@ -87,6 +91,7 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
         //Displays the data in the appropriate Views
         txtDeliveryItemID.setText("ID: " + lstDeliveryItems.get(position).getDeliveryStockID());
         txtDeliveryItemQuantity.setText("Quantity: " + lstDeliveryItems.get(position).getDeliveryItemQuantity());
+
         return convertView;
     }
 }

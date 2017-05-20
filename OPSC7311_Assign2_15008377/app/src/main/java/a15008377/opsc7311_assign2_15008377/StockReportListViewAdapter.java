@@ -72,11 +72,13 @@ public class StockReportListViewAdapter extends ArrayAdapter {
                         public void onClick(DialogInterface dialog, int button) {
                             try {
                                 switch (button) {
-                                    //Checks if the username is valid (length > 0 and every character is an alphabetic character)
                                     case AlertDialog.BUTTON_POSITIVE:
+                                        //Removes the Stock item from the Stock.txt text file
                                         String stockID = lstStock.get(position).getStockID();
                                         new Stock().deleteStockItem(stockID, context);
                                         lstStock.remove(position);
+
+                                        //Removes all Delivery Items that used that Stock item
                                         DBAdapter dbAdapter = new DBAdapter(context);
                                         dbAdapter.open();
                                         dbAdapter.deleteDeliveryItemsByStockID(stockID);

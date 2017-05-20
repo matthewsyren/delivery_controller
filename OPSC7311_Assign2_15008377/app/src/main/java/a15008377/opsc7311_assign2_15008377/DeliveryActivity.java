@@ -36,54 +36,80 @@ public class DeliveryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_delivery);
+        try{
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_add_delivery);
 
-        //Determines whether the user is adding or updating, and calls the appropriate methods
-        Bundle bundle = getIntent().getExtras();
-        action = bundle.getString("action");
-        Button button = (Button) findViewById(R.id.button_add_delivery);
-        lstDeliveryItems = new ArrayList<>();
-
-        if(action.equals("update")){
-            EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
-            txtDeliveryID.setEnabled(false);
-            button.setText("Update Delivery");
-            Delivery delivery = (Delivery) bundle.getSerializable("deliveryObject");
-            displayDelivery(delivery);
-            displayDeliveryItems(delivery.getDeliveryID());
+            //Methods display all required information for the Activity
+            displayViews();
+            displaySpinnerClients();
+            displaySpinnerDeliveryItems();
         }
-        else if(action.equals("add")){
-            button.setText("Add Delivery");
-            ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
-            DeliveryItemListViewAdapter adapter = new DeliveryItemListViewAdapter(this, new ArrayList<DeliveryItem>());
-            listView.setAdapter(adapter);
-            adapter.registerDataSetObserver(new DataSetObserver() {
-                @Override
-                public void onChanged() {
-                    super.onChanged();
-                    displayItems();
-                }
-            });
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
 
-        //Method displays the clients in the spinner_delivery_client Spinner
-        displayClients();
-        displayItems();
+    //Method alters Activity based on the action the user is performing
+    public void displayViews(){
+        try{
+            //Fetches the user's action from the Bundle
+            Bundle bundle = getIntent().getExtras();
+            action = bundle.getString("action");
+            Button button = (Button) findViewById(R.id.button_add_delivery);
+            lstDeliveryItems = new ArrayList<>();
+
+            //Changes Activity based on the user's action
+            if(action.equals("update")){
+                EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
+                txtDeliveryID.setEnabled(false);
+                button.setText("Update Delivery");
+                Delivery delivery = (Delivery) bundle.getSerializable("deliveryObject");
+                displayDelivery(delivery);
+                displayDeliveryItems(delivery.getDeliveryID());
+            }
+            else if(action.equals("add")){
+                button.setText("Add Delivery");
+
+                //Sets Adapter for the list_view_delivery_items ListView (there will be no data initially as the user is adding a new Delivery
+                ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+                DeliveryItemListViewAdapter adapter = new DeliveryItemListViewAdapter(this, new ArrayList<DeliveryItem>());
+                listView.setAdapter(adapter);
+
+                //Sets DataSetObserver for the ListView's adapter, which will update the items displayed in the Spinner for Delivery Items whenever an item is added to/removed from the ListView
+                adapter.registerDataSetObserver(new DataSetObserver() {
+                    @Override
+                    public void onChanged() {
+                        super.onChanged();
+                        displaySpinnerDeliveryItems();
+                    }
+                });
+            }
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method displays the Delivery object's values
     public void displayDelivery(Delivery delivery){
-        EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
-        TextView txtDeliveryDate = (TextView) findViewById(R.id.text_delivery_date);
+        try{
+            //View assignments
+            EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
+            TextView txtDeliveryDate = (TextView) findViewById(R.id.text_delivery_date);
 
-        txtDeliveryID.setText(delivery.getDeliveryID());
-        txtDeliveryDate.setText(delivery.getDeliveryDate());
-        displayDeliveryItems(delivery.getDeliveryID());
+            //Populate view data
+            txtDeliveryID.setText(delivery.getDeliveryID());
+            txtDeliveryDate.setText(delivery.getDeliveryDate());
+            displayDeliveryItems(delivery.getDeliveryID());
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     //Method populates the spinner_delivery_client with all available clients
-    public void displayClients(){
+    public void displaySpinnerClients(){
         try{
             DBAdapter dbAdapter = new DBAdapter(this);
             dbAdapter.open();
@@ -91,22 +117,26 @@ public class DeliveryActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter;
             List<String> lstClients = new ArrayList<>();
 
+            //Loops through the available Clients and adds them to the lstClients ArrayList
             Cursor cursor = dbAdapter.getAllClients();
             if(cursor.moveToFirst()){
                 do{
                     lstClients.add(cursor.getString(0) + " - " + cursor.getString(1));
                 }while(cursor.moveToNext());
             }
-            adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_row, lstClients);
+
+            //Sets Adapter for the Spinner using lstClients
+            adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_row, R.id.text_spinner_item_id, lstClients);
             spinner.setAdapter(adapter);
+            dbAdapter.close();
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    //Method populates the spinner_delivery_items with items from the Stock text file
-    public void displayItems(){
+    //Method populates the spinner_delivery_items with items from the Stock text file, and removes the items that have been taken by the current Delivery already
+    public void displaySpinnerDeliveryItems(){
         try{
             Spinner spinner = (Spinner) findViewById(R.id.spinner_delivery_items);
             ArrayAdapter<String> adapter;
@@ -118,20 +148,21 @@ public class DeliveryActivity extends AppCompatActivity {
             ListView listViewDeliveryItems = (ListView) findViewById(R.id.list_view_delivery_items);
             Adapter lstDeliveryItems =  listViewDeliveryItems.getAdapter();
 
+            //Adds Stock thta has been used by the Delivery to the lstUsedStock ArrayList
             for(int i = 0; i < lstDeliveryItems.getCount(); i++){
                 DeliveryItem item = (DeliveryItem) lstDeliveryItems.getItem(i);
                 lstUsedStock.add(item.getDeliveryStockID());
             }
 
-            //Adds stock items that haven't been used yet to the Spinner
+            //Adds stock items that haven't been used by the Delivery yet to the Spinner
             for(int i = 0; i < lstStock.size(); i++){
                 if(!lstUsedStock.contains(lstStock.get(i).getStockID())){
                     lstItems.add(lstStock.get(i).getStockID() + " - " + lstStock.get(i).getStockDescription());
                 }
             }
 
-            //Sets the adapter for the spinner
-            adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_row, lstItems);
+            //Sets the adapter for the Spinner
+            adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_row, R.id.text_spinner_item_id, lstItems);
             spinner.setAdapter(adapter);
         }
         catch(FileNotFoundException fnf){
@@ -144,52 +175,67 @@ public class DeliveryActivity extends AppCompatActivity {
 
     //Method displays the Delivery's selected items in the list_view_delivery_items
     public void displayDeliveryItems(String deliveryID){
-        DBAdapter dbAdapter = new DBAdapter(this);
-        dbAdapter.open();
-        Cursor cursor = dbAdapter.getDeliveryItems(deliveryID);
-        ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
+        try{
+            DBAdapter dbAdapter = new DBAdapter(this);
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.getDeliveryItems(deliveryID);
+            ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
 
-        if(cursor.moveToFirst()){
-            do{
-                DeliveryItem deliveryItem = new DeliveryItem(cursor.getString(0), cursor.getInt(1));
-                lstDeliveryItems.add(deliveryItem);
-            }while(cursor.moveToNext());
+            if(cursor.moveToFirst()){
+                do{
+                    DeliveryItem deliveryItem = new DeliveryItem(cursor.getString(0), cursor.getInt(1));
+                    lstDeliveryItems.add(deliveryItem);
+                }while(cursor.moveToNext());
 
-            //Adds items to the ListView
-            DeliveryItemListViewAdapter deliveryItemListViewAdapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
-            ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
-            listView.setAdapter(deliveryItemListViewAdapter);
-            deliveryItemListViewAdapter.registerDataSetObserver(new DataSetObserver() {
-                @Override
-                public void onChanged() {
-                    super.onChanged();
-                    displayItems();
-                }
-            });
-        }
-        dbAdapter.close();
-    }
+                //Sets adapter for the ListView
+                DeliveryItemListViewAdapter deliveryItemListViewAdapter = new DeliveryItemListViewAdapter(this, lstDeliveryItems);
+                ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+                listView.setAdapter(deliveryItemListViewAdapter);
 
-    //Method displays a DatePickerDialog for the user to choose the delivery date
-    public void chooseDateOnClick(View vie){
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog (this, new DatePickerDialog.OnDateSetListener(){
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                TextView txtDate = (TextView) findViewById(R.id.text_delivery_date);
-                txtDate.setText((dayOfMonth + "/" + (month + 1) + "/" + year));
+                //Sets DataSetObserver for the ListView's adapter, which will update the items displayed in the Spinner for Delivery Items whenever an item is added to/removed from the ListView
+                deliveryItemListViewAdapter.registerDataSetObserver(new DataSetObserver() {
+                    @Override
+                    public void onChanged() {
+                        super.onChanged();
+                        displaySpinnerDeliveryItems();
+                    }
+                });
             }
-        },calendar.get(Calendar.YEAR) , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
+            dbAdapter.close();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
-    //Method adds the delivery details to the database
+    //Method displays a DatePickerDialog for the user to choose the Delivery date
+    public void chooseDateOnClick(View view){
+        try{
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog datePickerDialog = new DatePickerDialog (this, new DatePickerDialog.OnDateSetListener(){
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    //Displays the chosen date in the text_delivery_date TextView
+                    TextView txtDate = (TextView) findViewById(R.id.text_delivery_date);
+                    txtDate.setText((dayOfMonth + "/" + (month + 1) + "/" + year));
+                }
+            },calendar.get(Calendar.YEAR) , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //Method adds/updates the Delivery details to the database
     public void addDeliveryOnClick(View view){
         try{
+            //Assignments
             EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
             TextView txtDeliveryDate = (TextView) findViewById(R.id.text_delivery_date);
             Spinner spinner = (Spinner) findViewById(R.id.spinner_delivery_client);
             Intent intent = null;
+            boolean enoughStock = true;
 
             //Assigns values to the Delivery object
             String deliveryID = txtDeliveryID.getText().toString();
@@ -200,8 +246,6 @@ public class DeliveryActivity extends AppCompatActivity {
             ArrayList<Stock> lstStock = new Stock().readStockItems(this);
 
             //Loops through available Stock to ensure that there is enough Stock available to cater for the Delivery
-            boolean enoughStock = true;
-
             for(int i = 0; i < lstDeliveryItems.size(); i++){
                 String deliveryStockID = lstDeliveryItems.get(i).getDeliveryStockID();
                 int numberOfItems = lstDeliveryItems.get(i).getDeliveryItemQuantity();
@@ -209,12 +253,14 @@ public class DeliveryActivity extends AppCompatActivity {
                     String stockID = lstStock.get(j).getStockID();
                     int availableStockQuantity = lstStock.get(j).getStockQuantity();
 
+                    //Checks if there is enough Stock of each item to cater for the Delivery
                     if(deliveryStockID.equals(stockID)){
                         if(numberOfItems > availableStockQuantity){
                             Toast.makeText(getApplicationContext(), "There are only " + availableStockQuantity + " item/s left of " + deliveryStockID + ". Please reduce the number of " + deliveryStockID + " items for this delivery", Toast.LENGTH_LONG).show();
                             enoughStock = false;
                         }
                         else{
+                            //Resets the available Stock quantity when updating the Delivery, before subtracting the new number of Stock items
                             if(action.equals("update")){
                                 DBAdapter dbAdapter = new DBAdapter(this);
                                 dbAdapter.open();
@@ -223,6 +269,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                     int oldQuantity = cursor.getInt(1);
                                     availableStockQuantity += oldQuantity;
                                 }
+                                dbAdapter.close();
                             }
                             lstStock.get(j).setStockQuantity(availableStockQuantity - numberOfItems);
                         }
@@ -230,46 +277,74 @@ public class DeliveryActivity extends AppCompatActivity {
                 }
             }
 
-            //Writes the Delivery details to the database if there is enough Stock for the Delivery
+            //Writes the Delivery details to the database if there is enough Stock of each item for the Delivery
             if(enoughStock){
                 Delivery delivery = new Delivery(deliveryID, clientID, deliveryDate, 0, getDeliveryItems());
                 DBAdapter dbAdapter = new DBAdapter(this);
                 dbAdapter.open();
 
-                //Writes the delivery details to the database if the information is valid
+                //Writes the Delivery details to the database if the information is valid
                 if(delivery.validateDelivery(this)){
                     if(action.equals("add") && !delivery.checkDeliveryID(this)){
+                        //Writes the Delivery details to the database when the user adds a new Delivery
                         dbAdapter.insertDelivery(delivery);
                         Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
                         dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+
+                        //Resets the Activity to allow the user to add new Deliveries
                         intent = getIntent();
                         finish();
                     }
                     else if(action.equals("update")){
+                        //Updates the Delivery, and rewrites its Delivery Items to the database when the user updates a Delivery
                         dbAdapter.updateDelivery(delivery);
                         dbAdapter.deleteDeliveryItems(delivery.getDeliveryID());
                         dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
                         Toast.makeText(getApplicationContext(), "Updated delivery successfully", Toast.LENGTH_LONG).show();
+
+                        //Takes the user back to the DeliveryControlActivity once the update is complete
                         intent = new Intent(DeliveryActivity.this, DeliveryControlActivity.class);
                     }
                     new Stock().rewriteFile(lstStock, this);
-                    startActivity(intent);
                     dbAdapter.close();
+                    startActivity(intent);
                 }
             }
         }
+        catch(NullPointerException npe){
+            Spinner spnClients = (Spinner) findViewById(R.id.spinner_delivery_client);
+            Spinner spnItems = (Spinner) findViewById(R.id.spinner_delivery_items);
+
+            //Displays appropriate error message based on the quantities of the Spinners
+            if(spnClients.getCount() == 0){
+                Toast.makeText(getApplicationContext(), "There are no Clients in the database, please go to Client Control to add Clients before scheduling a Delivery", Toast.LENGTH_LONG).show();
+            }
+            else if(spnItems.getCount() == 0){
+                Toast.makeText(getApplicationContext(), "There are no Stock Items in the database, please go to Stock Control to add Stock before scheduling a Delivery", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(getApplicationContext(), npe.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
         catch(Exception exc){
-            Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     //Method reads the list_view_delivery_items ListView and returns an ArrayList containing all the DeliveryItem objects within it
     public ArrayList<DeliveryItem> getDeliveryItems() throws NullPointerException{
         ArrayList<DeliveryItem> lstDeliveryItems = new ArrayList<>();
-        ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
-        for(int i = 0; i < listView.getCount(); i++){
-            lstDeliveryItems.add((DeliveryItem) listView.getItemAtPosition(i));
+
+        try{
+            ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
+            for(int i = 0; i < listView.getCount(); i++){
+                lstDeliveryItems.add((DeliveryItem) listView.getItemAtPosition(i));
+            }
         }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         return lstDeliveryItems;
     }
 
@@ -293,11 +368,11 @@ public class DeliveryActivity extends AppCompatActivity {
                 spinnerAdapter.remove(spinner.getSelectedItem().toString());
                 spinnerAdapter.notifyDataSetChanged();
 
-                //Sets the ListViewAdapter for list_view_delivery_items
+                //Updates the adapter for list_view_delivery_items
                 ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
                 DeliveryItemListViewAdapter deliveryItemListViewAdapter = (DeliveryItemListViewAdapter) listView.getAdapter();
                 deliveryItemListViewAdapter.add(deliveryItem);
-                listView.setAdapter(deliveryItemListViewAdapter);
+                deliveryItemListViewAdapter.notifyDataSetChanged();
             }
         }
         catch(NumberFormatException nfe){

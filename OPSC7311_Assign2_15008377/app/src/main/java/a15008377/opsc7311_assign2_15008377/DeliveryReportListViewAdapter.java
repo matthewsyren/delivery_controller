@@ -66,6 +66,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         txtDeliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
         txtDeliveryComplete.setText("Delivery Complete: " + (lstDeliveries.get(position).getDeliveryComplete() == 0 ? "No" : "Yes") + "\n\n");
 
+        //Loops through all Delivery Items for the Delivery and displays them
         final ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();
         String itemText = "Delivery Items: \n";
         for(int i = 0; i < lstDeliveryItems.size(); i++){
@@ -76,6 +77,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         }
         txtDeliveryItems.setText(itemText);
 
+        //Displays the buttons to mark a delivery as complete or delete a Delivery if the Delivery is incomplete, and hides those buttons if the Delivery is complete
         if(lstDeliveries.get(position).getDeliveryComplete() == 0){
             //Sets OnClickListener for the button_delete_delivery Button
             btnDeleteDelivery.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +115,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
                         }
                     };
 
-                    //Assigns button and OnClickListener for the AlertDialog and displays the AlertDialog
+                    //Assigns button an OnClickListener for the AlertDialog and displays the AlertDialog
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES", dialogOnClickListener);
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", dialogOnClickListener);
                     alertDialog.setCanceledOnTouchOutside(false);
@@ -143,10 +145,10 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
             });
         }
         else{
+            //Hides the buttons if the Delivery is complete
             btnDeleteDelivery.setVisibility(View.GONE);
             btnMarkDeliveryAsComplete.setVisibility(View.GONE);
         }
-
 
         return convertView;
     }

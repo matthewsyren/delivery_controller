@@ -74,9 +74,9 @@ public class Client implements Serializable{
         this.clientLatitude = clientLatitude;
     }
 
-    //Method ensures that the Client has valid values for all of its fields
+    //Method ensures that the Client has valid values for all of its fields. Returns true of Client is valid, otherwise returns false
     public boolean validateClient(Context context){
-        boolean validStock = false;
+        boolean validClient = false;
 
         //If statements check numerous validation criteria for the Stock object.
         if(clientID.length() == 0){
@@ -95,33 +95,38 @@ public class Client implements Serializable{
             displayMessage("Please enter a Client Address", context);
         }
         else{
-            validStock = true;
+            validClient = true;
         }
-        return validStock;
+        return validClient;
     }
 
     //Method checks if the entered Client ID has already been taken. The method returns true if it has been taken, and false if it hasn't been taken
     public boolean checkClientID(Context context) throws IOException {
-        boolean stockIDTaken = false;
+        boolean clientIDTaken = false;
         DBAdapter dbAdapter = new DBAdapter(context);
         dbAdapter.open();
         Client client = dbAdapter.getClient(clientID);
         if(client != null){
-            stockIDTaken = true;
+            clientIDTaken = true;
             displayMessage("Client ID is taken, please choose another one", context);
         }
-        return stockIDTaken;
+        dbAdapter.close();
+        return clientIDTaken;
     }
 
+    //Method parses the JSOn from the response String passed into the method, and returns a JSONObject if the JSON is valid, otherwise it returns null
     public static JSONObject getAddressCoordinates(String response, Context context) throws JSONException{
         JSONObject jsonObject = new JSONObject(response);
+
         if(jsonObject.getString("status").equals("OK")){
+            //Creates JSONObject if JSON is valid
             JSONArray jsonArray = jsonObject.getJSONArray("results");
             JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
 
             return location;
         }
         else{
+            //Displays error message saying address wasn't found
             Toast.makeText(context, "Google Maps was unable to locate the address you typed in, please ensure that the address you have typed in is correct", Toast.LENGTH_LONG).show();
         }
         return null;

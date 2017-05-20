@@ -54,7 +54,7 @@
                 android:id="@+id/spinner_delivery_client"
                 android:layout_below="@+id/label_delivery_client"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                style="@style/Widget.AppCompat.Spinner.Underlined"/>
+                style="@style/Widget.AppCompat.Spinner.DropDown"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                     android:id="@+id/spinner_delivery_items"
                     android:layout_below="@+id/label_delivery_items"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"/>
+                    style="@style/Widget.AppCompat.Spinner.DropDown"/>
 
                 <TextView
                     android:layout_width="wrap_content"

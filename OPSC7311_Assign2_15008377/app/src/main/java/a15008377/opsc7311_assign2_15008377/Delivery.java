@@ -84,6 +84,7 @@ public class Delivery implements Serializable {
         else{
             validStock = true;
         }
+
         return validStock;
     }
 
@@ -97,6 +98,8 @@ public class Delivery implements Serializable {
             deliveryIDTaken = true;
             displayMessage("Delivery ID is taken, please choose another one", context);
         }
+        dbAdapter.close();
+
         return deliveryIDTaken;
     }
 
@@ -123,6 +126,7 @@ public class Delivery implements Serializable {
             }while(cursor.moveToNext());
         }
         dbAdapter.close();
+
         return lstSearchResults;
     }
 
@@ -145,6 +149,7 @@ public class Delivery implements Serializable {
             }while(deliveryCursor.moveToNext());
         }
         dbAdapter.close();
+
         return lstDeliveries;
     }
 }

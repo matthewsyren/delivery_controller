@@ -24,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_view_available_stock"
-        android:layout_below="@id/text_stock_report_heading"/>
+        android:layout_below="@id/text_stock_report_heading"
+        android:fadeScrollbars="false"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

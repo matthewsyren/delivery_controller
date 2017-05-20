@@ -29,18 +29,30 @@ public class StockActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_add_stock);
 
+            displayViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //Method alters Activity based on the action the user is performing
+    public void displayViews(){
+        try{
+            //Fetches the user's action from the Bundle
             Bundle bundle = getIntent().getExtras();
             action = bundle.getString("action");
+            Button button = (Button) findViewById(R.id.button_add_stock);
+
+            //Changes Activity based on the user's action
             if(action.equals("update")){
                 EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
                 txtStockID.setEnabled(false);
-                Button button = (Button) findViewById(R.id.button_add_stock);
                 button.setText("Update Stock");
                 Stock stock = (Stock) bundle.getSerializable("stockObject");
                 displayData(stock);
             }
             else if(action.equals("add")){
-                Button button = (Button) findViewById(R.id.button_add_stock);
                 button.setText("Add Stock");
             }
         }
@@ -48,14 +60,15 @@ public class StockActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
     //Method pre-populates the TextViews on this Activity with the data from the Stock item that was clicked on in the previous Activity and sent through the bundle
     public void displayData(Stock stock){
         try{
+            //View assignments
             EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
             EditText txtStockDescription = (EditText) findViewById(R.id.text_stock_description);
             EditText txtStockQuantity = (EditText) findViewById(R.id.text_stock_quantity);
 
+            //Displays the Stock item's data in the appropriate Views
             txtStockID.setText(stock.getStockID());
             txtStockDescription.setText(stock.getStockDescription());
             txtStockQuantity.setText(stock.getStockQuantity() + "");
@@ -65,6 +78,7 @@ public class StockActivity extends AppCompatActivity {
         }
     }
 
+    //Method adds/updates the Stock details to the database
     public void addStockOnClick(View view) {
         try{
             EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
@@ -79,8 +93,11 @@ public class StockActivity extends AppCompatActivity {
             Stock stock = new Stock(stockID, stockDescription, stockQuantity);
             if(stock.validateStock(this)){
                 if(action.equals("add") && !stock.checkStockID(this)){
+                    //Writes the Stock item's information to the Stock.txt text file
                     writeToFile(stock.getStockID(), stock.getStockDescription(), stock.getStockQuantity());
                     Toast.makeText(this, "Stock item added successfully", Toast.LENGTH_LONG).show();
+
+                    //Resets the Activity to allow the user to add another Stock item
                     intent = getIntent();
                     finish();
                 }
@@ -97,19 +114,18 @@ public class StockActivity extends AppCompatActivity {
                         }
                     }
 
+                    //Writes the updated Stock details to the Stock.txt text file
                     stock.rewriteFile(lstStock, getApplicationContext());
                     Toast.makeText(this, "Stock item updated successfully", Toast.LENGTH_LONG).show();
+
+                    //Takes the user back to the StokControlActivity once the update is completed
                     intent = new Intent(StockActivity.this, StockControlActivity.class);
                 }
                 startActivity(intent);
             }
-
         }
         catch(NumberFormatException nfe){
             Toast.makeText(getApplicationContext(), "Please enter a whole number for the Stock Quantity", Toast.LENGTH_LONG).show();
-        }
-        catch(IOException ioe){
-            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -124,9 +140,6 @@ public class StockActivity extends AppCompatActivity {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             outputStreamWriter.write(stockID + "|" + stockDescription + "|" + stockQuantity + "\n");
             outputStreamWriter.close();
-        }
-        catch(IOException ioe){
-            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();

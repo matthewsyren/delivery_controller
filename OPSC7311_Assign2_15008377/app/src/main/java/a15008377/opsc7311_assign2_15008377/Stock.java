@@ -36,6 +36,7 @@ public class Stock implements Serializable{
         this.stockQuantity = stockQuantity;
     }
 
+    //Default constructor
     public Stock(){}
 
     //Getter methods
@@ -79,6 +80,7 @@ public class Stock implements Serializable{
         else{
             validStock = true;
         }
+
         return validStock;
     }
 
@@ -86,11 +88,13 @@ public class Stock implements Serializable{
     public boolean checkStockID(Context context) throws IOException {
         boolean stockIDTaken = false;
 
+        //Creates the Stock.txt file if it is not found
         File file = new File(context.getFilesDir(), "Stock.txt");
         if(!file.exists()){
             file.createNewFile();
         }
 
+        //Loops through all existing Stock items and determines whether the stockID is taken already
         ArrayList<Stock> lstStock = readStockItems(context);
         for(int i = 0; i < lstStock.size() && !stockIDTaken; i++){
             if(lstStock.get(i).getStockID().equals(stockID)){
@@ -108,15 +112,16 @@ public class Stock implements Serializable{
         String line;
         ArrayList<Stock> lstStock = new ArrayList<Stock>();
         File file = new File(context.getFilesDir(), "Stock.txt");
-
         FileInputStream fileInputStream = context.openFileInput(file.getName());
         bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 
+        //Loops through the file and instantiate a Stock object for each line, and adding that Stock object to the lstStock ArrayList
         while((line = bufferedReader.readLine()) != null){
             String[] part = line.split("\\|");
             Stock stock = new Stock(part[0], part[1], Integer.parseInt(part[2]));
             lstStock.add(stock);
         }
+
         return lstStock;
     }
 
@@ -124,6 +129,7 @@ public class Stock implements Serializable{
     public void deleteStockItem(String stockID, Context context) throws IOException{
         boolean foundStockID = false;
 
+        //Loops through the Stock items until the item to be removed is found and removed
         ArrayList<Stock> lstStock = Stock.readStockItems(context);
         for(int i = 0; i < lstStock.size() && !foundStockID; i++) {
             if(lstStock.get(i).getStockID().equals(stockID)){
@@ -132,6 +138,8 @@ public class Stock implements Serializable{
                 foundStockID = true;
             }
         }
+
+        //Updates the contents of the Stock.txt text file
         rewriteFile(lstStock, context);
         Toast.makeText(context, "Stock item successfully deleted", Toast.LENGTH_LONG).show();
     }

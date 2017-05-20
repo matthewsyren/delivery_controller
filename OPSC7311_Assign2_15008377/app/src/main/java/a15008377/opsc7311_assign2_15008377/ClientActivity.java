@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class ClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
+    //Declarations
     Client client;
     String action;
 
@@ -32,18 +33,31 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_add_client);
 
+            //Displays Activity in appropriate form
+            displayViews();
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //Method alters Activity based on the action the user is performing
+    public void displayViews(){
+        try{
+            //Fetches the user's action from the Bundle
             Bundle bundle = getIntent().getExtras();
             action = bundle.getString("action");
+            Button button = (Button) findViewById(R.id.button_add_client);
+
+            //Changes Activity based on the user's action
             if(action.equals("update")){
                 EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
                 txtClientID.setEnabled(false);
-                Button button = (Button) findViewById(R.id.button_add_client);
                 button.setText("Update Client");
                 Client client = (Client) bundle.getSerializable("clientObject");
                 displayData(client);
             }
             else if(action.equals("add")){
-                Button button = (Button) findViewById(R.id.button_add_client);
                 button.setText("Add Client");
             }
         }
@@ -55,11 +69,13 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
     //Method pre-populates the TextViews on this Activity with the data from the Client item that was clicked on in the previous Activity and sent through the bundle
     public void displayData(Client client){
         try{
+            //View assignments
             EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
             EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
             EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
             EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
 
+            //Displays appropriate data in Views
             txtClientID.setText(client.getClientID());
             txtClientName.setText(client.getClientName());
             txtClientEmail.setText(client.getClientEmail());
@@ -70,38 +86,32 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
         }
     }
 
-    //Method stores the entered data for the client in the database
+    //Method adds/updates the Client details to the database
     public void addClientOnClick(View view) {
         try{
-            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar) ;
+            //View assignments
             EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
             EditText txtClientName = (EditText) findViewById(R.id.text_client_name);
             EditText txtClientEmail = (EditText) findViewById(R.id.text_client_email);
             EditText txtClientAddress = (EditText) findViewById(R.id.text_client_address);
 
+            //Fetches data from Views
             String clientID = txtClientID.getText().toString();
             String clientName = txtClientName.getText().toString();
             String clientEmail = txtClientEmail.getText().toString();
             String clientAddress = txtClientAddress.getText().toString();
             client = new Client(clientID, clientName, clientEmail, clientAddress);
-            progressBar.setVisibility(View.VISIBLE);
 
             //Calls the Google Maps API to determine whether the user has entered a valid address
             if(client.validateClient(this) && checkInternetConnection()){
-                if(action.equals("add") && !client.checkClientID(this)){
-                    APIConnection api = new APIConnection();
-                    api.delegate = this;
-                    api.execute("http://maps.google.com/maps/api/geocode/json?address=" + client.getClientAddress());
-                }
-                else if(action.equals("update")){
+                if(action.equals("update") || (action.equals("add") && !client.checkClientID(this))){
+                    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar) ;
+                    progressBar.setVisibility(View.VISIBLE);
                     APIConnection api = new APIConnection();
                     api.delegate = this;
                     api.execute("http://maps.google.com/maps/api/geocode/json?address=" + client.getClientAddress());
                 }
             }
-        }
-        catch (IOException ioe){
-            Toast.makeText(getApplicationContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -112,7 +122,10 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
     @Override
     public void getJsonResponse(String response) {
         try{
+            //Turns response into JSONObject
             JSONObject location = Client.getAddressCoordinates(response, this);
+
+            //Saves address coordinates if they were found by Google Maps
             if(location != null){
                 client.setClientLatitude(location.getDouble("lat"));
                 client.setClientLongitude(location.getDouble("lng"));
@@ -125,6 +138,8 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
                 if(action.equals("add")){
                     if(dbAdapter.insertClient(client) >= 0){
                         Toast.makeText(getApplicationContext(), "Client successfully added", Toast.LENGTH_LONG).show();
+
+                        //Restarts Activity (clears Views to allow user to enter another Client)
                         intent = getIntent();
                         finish();
                     }
@@ -132,6 +147,8 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
                 else if(action.equals("update")){
                     if(dbAdapter.updateClient(client.getClientID(), client.getClientName(), client.getClientEmail(), client.getClientAddress(), client.getClientLatitude(), client.getClientLongitude())){
                         Toast.makeText(getApplicationContext(), "Client successfully updated", Toast.LENGTH_LONG).show();
+
+                        //Takes the user back to the ClientControlActivity once the update is complete
                         intent = new Intent(ClientActivity.this, ClientControlActivity.class);
                     }
                 }

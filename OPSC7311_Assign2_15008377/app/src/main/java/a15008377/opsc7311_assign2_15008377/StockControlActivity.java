@@ -41,8 +41,12 @@ public class StockControlActivity extends BaseActivity {
                     if(keyCode == KeyEvent.KEYCODE_ENTER){
                         String searchTerm = txtSearchStock.getText().toString();
                         searchStock(searchTerm);
+
+                        //Hides the keybpard once the search is completed
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                        //Displays message to the user
                         Toast.makeText(getApplicationContext(), "Search complete!", Toast.LENGTH_LONG).show();
                         return true;
                     }
@@ -58,6 +62,7 @@ public class StockControlActivity extends BaseActivity {
         }
     }
 
+    //Repopulates the views when the Activity is resumed
     @Override
     public void onResume(){
         try{
@@ -73,6 +78,8 @@ public class StockControlActivity extends BaseActivity {
     public void searchStock(String searchTerm){
         try{
             ArrayList<Stock> lstStock = Stock.readStockItems(this);
+
+            //Loops through all Stock items and removes the ones that don't match the search term
             for(int i = 0; i < lstStock.size(); i++){
                 if(!lstStock.get(i).getStockID().contains(searchTerm)){
                     lstStock.remove(i);

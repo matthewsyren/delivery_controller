@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 public class BaseActivity extends FragmentActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+                          implements NavigationView.OnNavigationItemSelectedListener {
 
     //Declarations
     private NavigationView navigationView;
