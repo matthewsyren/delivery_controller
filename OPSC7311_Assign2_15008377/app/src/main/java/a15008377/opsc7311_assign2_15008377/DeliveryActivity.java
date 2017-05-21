@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
@@ -48,6 +49,25 @@ public class DeliveryActivity extends AppCompatActivity {
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    //Takes the user back to the DeliveryControlActivity when the back button is pressed
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try{
+            int id = item.getItemId();
+
+            //Takes the user back to the DeliveryControlActivity if the button that was pressed was the back button
+            if (id == android.R.id.home) {
+                Intent intent = new Intent(DeliveryActivity.this, DeliveryControlActivity.class);
+                startActivity(intent);
+            }
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     //Method alters Activity based on the action the user is performing
@@ -85,6 +105,9 @@ public class DeliveryActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            //Displays Back button in ActionBar
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -255,22 +278,23 @@ public class DeliveryActivity extends AppCompatActivity {
 
                     //Checks if there is enough Stock of each item to cater for the Delivery
                     if(deliveryStockID.equals(stockID)){
+                        //Resets the available Stock quantity when updating the Delivery, before subtracting the new number of Stock items
+                        if(action.equals("update")){
+                            DBAdapter dbAdapter = new DBAdapter(this);
+                            dbAdapter.open();
+                            Cursor cursor = dbAdapter.getDeliveryItem(deliveryID, deliveryStockID);
+                            if(cursor.moveToFirst()){
+                                int oldQuantity = cursor.getInt(1);
+                                availableStockQuantity += oldQuantity;
+                            }
+                            dbAdapter.close();
+                        }
+
                         if(numberOfItems > availableStockQuantity){
-                            Toast.makeText(getApplicationContext(), "There are only " + availableStockQuantity + " item/s left of " + deliveryStockID + ". Please reduce the number of " + deliveryStockID + " items for this delivery", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "There are only " + availableStockQuantity + " item/s left of " + deliveryStockID + " in stock. Please reduce the number of " + deliveryStockID + " items for this delivery", Toast.LENGTH_LONG).show();
                             enoughStock = false;
                         }
                         else{
-                            //Resets the available Stock quantity when updating the Delivery, before subtracting the new number of Stock items
-                            if(action.equals("update")){
-                                DBAdapter dbAdapter = new DBAdapter(this);
-                                dbAdapter.open();
-                                Cursor cursor = dbAdapter.getDeliveryItem(deliveryID, deliveryStockID);
-                                if(cursor.moveToFirst()){
-                                    int oldQuantity = cursor.getInt(1);
-                                    availableStockQuantity += oldQuantity;
-                                }
-                                dbAdapter.close();
-                            }
                             lstStock.get(j).setStockQuantity(availableStockQuantity - numberOfItems);
                         }
                     }
@@ -313,14 +337,10 @@ public class DeliveryActivity extends AppCompatActivity {
         }
         catch(NullPointerException npe){
             Spinner spnClients = (Spinner) findViewById(R.id.spinner_delivery_client);
-            Spinner spnItems = (Spinner) findViewById(R.id.spinner_delivery_items);
 
             //Displays appropriate error message based on the quantities of the Spinners
             if(spnClients.getCount() == 0){
-                Toast.makeText(getApplicationContext(), "There are no Clients in the database, please go to Client Control to add Clients before scheduling a Delivery", Toast.LENGTH_LONG).show();
-            }
-            else if(spnItems.getCount() == 0){
-                Toast.makeText(getApplicationContext(), "There are no Stock Items in the database, please go to Stock Control to add Stock before scheduling a Delivery", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "There are currently no Clients in the database, please go to Client Control to add Clients before scheduling a Delivery", Toast.LENGTH_LONG).show();
             }
             else{
                 Toast.makeText(getApplicationContext(), npe.getMessage(), Toast.LENGTH_LONG).show();

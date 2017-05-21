@@ -11,6 +11,7 @@ package a15008377.opsc7311_assign2_15008377;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,25 @@ public class StockActivity extends AppCompatActivity {
         }
     }
 
+    //Takes the user back to the StockControlActivity when the back button is pressed
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try{
+            int id = item.getItemId();
+
+            //Takes the user back to the StockControlActivity if the button that was pressed was the back button
+            if (id == android.R.id.home) {
+                Intent intent = new Intent(StockActivity.this, StockControlActivity.class);
+                startActivity(intent);
+            }
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     //Method alters Activity based on the action the user is performing
     public void displayViews(){
         try{
@@ -55,6 +75,9 @@ public class StockActivity extends AppCompatActivity {
             else if(action.equals("add")){
                 button.setText("Add Stock");
             }
+
+            //Displays Back button in ActionBar
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();

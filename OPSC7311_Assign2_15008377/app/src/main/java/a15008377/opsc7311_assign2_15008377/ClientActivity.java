@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,25 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
         }
     }
 
+    //Takes the user back to the ClientControlActivity when the back button is pressed
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try{
+            int id = item.getItemId();
+
+            //Takes the user back to the ClientControlActivity if the button that was pressed was the back button
+            if (id == android.R.id.home) {
+                Intent intent = new Intent(ClientActivity.this, ClientControlActivity.class);
+                startActivity(intent);
+            }
+        }
+        catch(Exception exc){
+            Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     //Method alters Activity based on the action the user is performing
     public void displayViews(){
         try{
@@ -60,6 +80,9 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             else if(action.equals("add")){
                 button.setText("Add Client");
             }
+
+            //Displays Back button in ActionBar
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
