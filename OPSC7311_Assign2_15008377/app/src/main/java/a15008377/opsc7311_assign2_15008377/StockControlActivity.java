@@ -33,7 +33,7 @@ public class StockControlActivity extends BaseActivity {
             super.onCreateDrawer();
             super.setSelectedNavItem(R.id.nav_stock_control);
 
-            //Sets the onKeyListener for the text_search_client, which will perform a search when the enter key is pressed
+            //Sets the onKeyListener for the text_search_stock, which will perform a search when the enter key is pressed
             final EditText txtSearchStock = (EditText) findViewById(R.id.text_search_stock);
             txtSearchStock.setOnKeyListener(new View.OnKeyListener() {
                 @Override
