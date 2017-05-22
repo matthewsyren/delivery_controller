@@ -51,6 +51,8 @@
                 android:src="@drawable/ic_delete"
                 android:id="@+id/button_delete_client"
                 android:focusable="false"
+                android:paddingTop="@dimen/button_margin"
+                android:paddingBottom="@dimen/button_margin"
                 style="@style/SecondaryButtonStyle"/>
             </LinearLayout>
     </android.support.v7.widget.CardView>

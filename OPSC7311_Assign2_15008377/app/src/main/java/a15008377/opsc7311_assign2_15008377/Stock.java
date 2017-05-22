@@ -63,19 +63,19 @@ public class Stock implements Serializable{
 
         //If statements check numerous validation criteria for the Stock object.
         if(stockID.length() == 0){
-            displayMessage("Please enter a Stock ID", context);
+            Toast.makeText(context, "Please enter a Stock ID", Toast.LENGTH_LONG).show();
         }
         else if(stockID.contains("|")){
-            displayMessage("Please remove all | symbols from the Stock ID", context);
+            Toast.makeText(context, "Please remove all | symbols from the Stock ID", Toast.LENGTH_LONG).show();
         }
         else if(stockDescription.length() == 0){
-            displayMessage("Please enter a Stock Description", context);
+            Toast.makeText(context, "Please enter a Stock Description", Toast.LENGTH_LONG).show();
         }
         else if(stockDescription.contains("|")){
-            displayMessage("Please remove all | symbols from the Stock Description", context);
+            Toast.makeText(context, "Please remove all | symbols from the Stock Description", Toast.LENGTH_LONG).show();
         }
         else if(stockQuantity < 0){
-            displayMessage("Please enter a Stock Quantity that is more than or equal to 0", context);
+            Toast.makeText(context, "Please enter a Stock Quantity that is more than or equal to 0", Toast.LENGTH_LONG).show();
         }
         else{
             validStock = true;
@@ -99,7 +99,7 @@ public class Stock implements Serializable{
         for(int i = 0; i < lstStock.size() && !stockIDTaken; i++){
             if(lstStock.get(i).getStockID().equals(stockID)){
                 stockIDTaken = true;
-                displayMessage(stockID + " has already been taken by another stock item, please choose another Stock ID", context);
+                Toast.makeText(context, stockID + " has already been taken by another stock item, please choose another Stock ID", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -159,10 +159,5 @@ public class Stock implements Serializable{
             outputStreamWriter.write(lstStock.get(i).getStockID() + "|" + lstStock.get(i).getStockDescription() + "|" + lstStock.get(i).getStockQuantity() + "\n");
         }
         outputStreamWriter.close();
-    }
-
-    //Method displays a Toast message with the message that is passed in as a parameter
-    private void displayMessage(String message, Context context) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }

@@ -80,19 +80,19 @@ public class Client implements Serializable{
 
         //If statements check numerous validation criteria for the Stock object.
         if(clientID.length() == 0){
-            displayMessage("Please enter a Client ID", context);
+            Toast.makeText(context, "Please enter a Client ID", Toast.LENGTH_LONG).show();
         }
         else if(clientID.contains(" ")){
-            displayMessage("Please remove all spaces from the Client ID", context);
+            Toast.makeText(context, "Please remove all spaces from the Client ID", Toast.LENGTH_LONG).show();
         }
         else if(clientName.length() == 0){
-            displayMessage("Please enter a Client Name", context);
+            Toast.makeText(context, "Please enter a Client Name", Toast.LENGTH_LONG).show();
         }
         else if(clientEmail.length() == 0){
-            displayMessage("Please enter a Client Email", context);
+            Toast.makeText(context, "Please enter a Client Email", Toast.LENGTH_LONG).show();
         }
         else if(clientAddress.length() == 0){
-            displayMessage("Please enter a Client Address", context);
+            Toast.makeText(context, "Please enter a Client Address", Toast.LENGTH_LONG).show();
         }
         else{
             validClient = true;
@@ -108,7 +108,7 @@ public class Client implements Serializable{
         Client client = dbAdapter.getClient(clientID);
         if(client != null){
             clientIDTaken = true;
-            displayMessage("Client ID is taken, please choose another one", context);
+            Toast.makeText(context, "Client ID is taken, please choose another one", Toast.LENGTH_LONG).show();
         }
         dbAdapter.close();
         return clientIDTaken;
@@ -116,24 +116,24 @@ public class Client implements Serializable{
 
     //Method parses the JSOn from the response String passed into the method, and returns a JSONObject if the JSON is valid, otherwise it returns null
     public static JSONObject getAddressCoordinates(String response, Context context) throws JSONException{
-        JSONObject jsonObject = new JSONObject(response);
+        if(response != null){
+            JSONObject jsonObject = new JSONObject(response);
 
-        if(jsonObject.getString("status").equals("OK")){
-            //Creates JSONObject if JSON is valid
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+            if(jsonObject.getString("status").equals("OK")){
+                //Creates JSONObject if JSON is valid
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
+                JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
 
-            return location;
+                return location;
+            }
+            else{
+                //Displays error message saying address wasn't found
+                Toast.makeText(context, "Google Maps was unable to locate the address you typed in, please ensure that the address you have typed in is correct", Toast.LENGTH_LONG).show();
+            }
         }
         else{
-            //Displays error message saying address wasn't found
-            Toast.makeText(context, "Google Maps was unable to locate the address you typed in, please ensure that the address you have typed in is correct", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Problem fetching data from Google Maps, please try again...", Toast.LENGTH_LONG).show();
         }
         return null;
-    }
-
-    //Method displays a Toast message with the message that is passed in as a parameter
-    private void displayMessage(String message, Context context) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 }

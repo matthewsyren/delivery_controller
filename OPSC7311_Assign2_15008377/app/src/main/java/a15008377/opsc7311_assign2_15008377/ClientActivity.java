@@ -180,7 +180,12 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             }
         }
         catch(Exception exc){
+            exc.printStackTrace();
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        finally{
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar) ;
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 

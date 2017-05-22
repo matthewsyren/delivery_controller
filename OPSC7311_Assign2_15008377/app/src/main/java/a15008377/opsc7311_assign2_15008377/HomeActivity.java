@@ -92,9 +92,6 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
                                 LatLngBounds bounds = builder.build();
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
                             }
-                            else{
-                                Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
-                            }
                         }
                         catch(IllegalStateException ise){
                             Toast.makeText(getApplicationContext(), ise.getMessage(), Toast.LENGTH_LONG).show();
@@ -104,6 +101,9 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback {
                         layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "You have no deliveries for today... If you would like to add a delivery, go to the Delivery Control page", Toast.LENGTH_LONG).show();
             }
             dbAdapter.close();
         }

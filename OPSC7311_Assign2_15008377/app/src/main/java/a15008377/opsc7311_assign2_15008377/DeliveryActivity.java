@@ -395,6 +395,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 deliveryItemListViewAdapter.notifyDataSetChanged();
             }
         }
+        catch(NullPointerException nfe){
+            Toast.makeText(getApplicationContext(), "There are currently no items in Stock, please go to Stock Control to add Stock items before scheduling a Delivery", Toast.LENGTH_LONG).show();
+        }
         catch(NumberFormatException nfe){
             Toast.makeText(this, "Please enter a whole number for the Delivery Item Quantity", Toast.LENGTH_SHORT).show();
         }

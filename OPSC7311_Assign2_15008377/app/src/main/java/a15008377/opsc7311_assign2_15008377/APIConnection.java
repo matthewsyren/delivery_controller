@@ -47,12 +47,12 @@ public class APIConnection extends AsyncTask<String, Void, String> {
             return stringBuilder.toString();
         }
         catch(Exception exc){
-            throw exc;
+           exc.printStackTrace();
         }
         finally{
             urlConnection.disconnect();
-            return null;
         }
+        return null;
     }
 
     //Method passes the JSON back to the Main thread (to the class from which this class was instantiated)

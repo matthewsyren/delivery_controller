@@ -70,16 +70,16 @@ public class Delivery implements Serializable {
 
         //If statements check numerous validation criteria for the Stock object.
         if(deliveryID.length() == 0){
-            displayMessage("Please enter a Delivery ID", context);
+            Toast.makeText(context, "Please enter a Delivery ID", Toast.LENGTH_LONG).show();
         }
         else if(deliveryClientID.length() == 0){
-            displayMessage("Please enter a Delivery Client", context);
+            Toast.makeText(context, "Please enter a Delivery Client", Toast.LENGTH_LONG).show();
         }
         else if(deliveryDate.length() == 0){
-            displayMessage("Please enter a Delivery Date", context);
+            Toast.makeText(context, "Please enter a Delivery Date", Toast.LENGTH_LONG).show();
         }
         else if(lstDeliveryItems.size() == 0){
-            displayMessage("Please add at least one item to your delivery", context);
+            Toast.makeText(context, "Please add at least one item to your delivery", Toast.LENGTH_LONG).show();
         }
         else{
             validStock = true;
@@ -96,20 +96,14 @@ public class Delivery implements Serializable {
         Cursor cursor = dbAdapter.getDelivery(deliveryID);
         if(cursor.moveToFirst()){
             deliveryIDTaken = true;
-            displayMessage("Delivery ID is taken, please choose another one", context);
+            Toast.makeText(context, "Delivery ID is taken, please choose another one", Toast.LENGTH_LONG).show();
         }
         dbAdapter.close();
 
         return deliveryIDTaken;
     }
 
-
-    //Method displays a Toast message with the message that is passed in as a parameter
-    private void displayMessage(String message, Context context) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-    }
-
-    //Method fetches the Deliveries that match the search result and sned them to the displayDeliveries method
+    //Method fetches the Deliveries that match the search result and sends them to the displayDeliveries method
     public static ArrayList<Delivery> searchDeliveries(String searchTerm, Context context, int complete) throws SQLException{
         DBAdapter dbAdapter = new DBAdapter(context);
         dbAdapter.open();
@@ -130,7 +124,7 @@ public class Delivery implements Serializable {
         return lstSearchResults;
     }
 
-    //Method returns an ArrayList filled with either completed Deliveries on incompleted Deliveries
+    //Method returns an ArrayList filled with either completed Deliveries on incomplete Deliveries
     public static ArrayList<Delivery> getDeliveries(Context context, int complete){
         DBAdapter dbAdapter = new DBAdapter(context);
         dbAdapter.open();
