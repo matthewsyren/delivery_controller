@@ -9,6 +9,7 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Context;
+import android.util.Patterns;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +17,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.Serializable;
 
-
+@SuppressWarnings("WeakerAccess")
 public class Client implements Serializable{
     //Declarations
     private String clientID;
@@ -91,6 +92,9 @@ public class Client implements Serializable{
         else if(clientEmail.length() == 0){
             Toast.makeText(context, "Please enter a Client Email", Toast.LENGTH_LONG).show();
         }
+        else if(!Patterns.EMAIL_ADDRESS.matcher(clientEmail).matches()){
+            Toast.makeText(context, "Please enter a valid email address e.g. clientname@example.com", Toast.LENGTH_LONG).show();
+        }
         else if(clientAddress.length() == 0){
             Toast.makeText(context, "Please enter a Client Address", Toast.LENGTH_LONG).show();
         }
@@ -120,11 +124,9 @@ public class Client implements Serializable{
             JSONObject jsonObject = new JSONObject(response);
 
             if(jsonObject.getString("status").equals("OK")){
-                //Creates JSONObject if JSON is valid
+                //Returns JSONObject if JSON is valid
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
-                JSONObject location = jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-
-                return location;
+                return jsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
             }
             else{
                 //Displays error message saying address wasn't found

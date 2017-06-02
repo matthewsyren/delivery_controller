@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,7 @@ public class StockReportListViewAdapter extends ArrayAdapter {
 
     //Method populates the appropriate Views with the appropriate data (stored in the shows ArrayList)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         //View declarations
         TextView txtStockID;
         TextView txtStockDescription;
@@ -54,9 +56,10 @@ public class StockReportListViewAdapter extends ArrayAdapter {
         btnDeleteStock = (ImageButton) convertView.findViewById(R.id.button_delete_stock);
 
         //Displays the data in the appropriate Views
-        txtStockID.setText("ID: " + lstStock.get(position).getStockID());
-        txtStockDescription.setText("Description: " + lstStock.get(position).getStockDescription());
-        txtStockQuantity.setText("Quantity: " + lstStock.get(position).getStockQuantity());
+        Resources resources = context.getResources();
+        txtStockID.setText(resources.getString(R.string.stock_id, lstStock.get(position).getStockID()));
+        txtStockDescription.setText(resources.getString(R.string.stock_description, lstStock.get(position).getStockDescription()));
+        txtStockQuantity.setText(resources.getString(R.string.stock_quantity, lstStock.get(position).getStockQuantity()));
 
         //Sets OnClickListener for the button_delete_stock Button
         btnDeleteStock.setOnClickListener(new View.OnClickListener() {

@@ -9,7 +9,7 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import java.io.Serializable;
-
+@SuppressWarnings("WeakerAccess")
 public class DeliveryItem implements Serializable{
     //Declarations
     private String deliveryStockID;

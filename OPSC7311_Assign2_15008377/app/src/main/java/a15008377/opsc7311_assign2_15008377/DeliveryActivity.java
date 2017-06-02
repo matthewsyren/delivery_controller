@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,13 +84,13 @@ public class DeliveryActivity extends AppCompatActivity {
             if(action.equals("update")){
                 EditText txtDeliveryID = (EditText) findViewById(R.id.text_delivery_id);
                 txtDeliveryID.setEnabled(false);
-                button.setText("Update Delivery");
+                button.setText(R.string.button_update_delivery);
                 Delivery delivery = (Delivery) bundle.getSerializable("deliveryObject");
                 displayDelivery(delivery);
                 displayDeliveryItems(delivery.getDeliveryID());
             }
             else if(action.equals("add")){
-                button.setText("Add Delivery");
+                button.setText(R.string.button_add_delivery);
 
                 //Sets Adapter for the list_view_delivery_items ListView (there will be no data initially as the user is adding a new Delivery
                 ListView listView = (ListView) findViewById(R.id.list_view_delivery_items);
@@ -107,7 +108,10 @@ public class DeliveryActivity extends AppCompatActivity {
             }
 
             //Displays Back button in ActionBar
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null){
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -309,29 +313,31 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 //Writes the Delivery details to the database if the information is valid
                 if(delivery.validateDelivery(this)){
-                    if(action.equals("add") && !delivery.checkDeliveryID(this)){
+                    if(action.equals("add") && !delivery.checkDeliveryID(this) && delivery.checkDeliveryDate(this)){
                         //Writes the Delivery details to the database when the user adds a new Delivery
                         dbAdapter.insertDelivery(delivery);
                         Toast.makeText(getApplicationContext(), "Delivery successfully added", Toast.LENGTH_LONG).show();
                         dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+                        new Stock().rewriteFile(lstStock, this);
 
                         //Resets the Activity to allow the user to add new Deliveries
                         intent = getIntent();
                         finish();
+                        startActivity(intent);
                     }
                     else if(action.equals("update")){
                         //Updates the Delivery, and rewrites its Delivery Items to the database when the user updates a Delivery
                         dbAdapter.updateDelivery(delivery);
                         dbAdapter.deleteDeliveryItems(delivery.getDeliveryID());
                         dbAdapter.insertDeliveryItems(delivery.getDeliveryID(), delivery.getLstDeliveryItems());
+                        new Stock().rewriteFile(lstStock, this);
                         Toast.makeText(getApplicationContext(), "Updated delivery successfully", Toast.LENGTH_LONG).show();
 
                         //Takes the user back to the DeliveryControlActivity once the update is complete
                         intent = new Intent(DeliveryActivity.this, DeliveryControlActivity.class);
+                        startActivity(intent);
                     }
-                    new Stock().rewriteFile(lstStock, this);
                     dbAdapter.close();
-                    startActivity(intent);
                 }
             }
         }

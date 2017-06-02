@@ -10,11 +10,11 @@
 package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +42,7 @@ public class BaseActivity extends FragmentActivity
     //Method opens the NavigationDrawer when the menu button is clicked
     public void toggleDrawer(View view){
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.openDrawer(Gravity.LEFT);
+        drawerLayout.openDrawer(GravityCompat.START);
     }
 
     //Method sets the selected item in the Navigation Drawer
@@ -84,7 +84,7 @@ public class BaseActivity extends FragmentActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

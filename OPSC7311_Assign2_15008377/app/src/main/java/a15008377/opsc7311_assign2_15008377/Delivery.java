@@ -14,9 +14,14 @@ import android.database.SQLException;
 import android.widget.Toast;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
-
+@SuppressWarnings("WeakerAccess")
 public class Delivery implements Serializable {
     //Declarations
     private String deliveryID;
@@ -101,6 +106,19 @@ public class Delivery implements Serializable {
         dbAdapter.close();
 
         return deliveryIDTaken;
+    }
+
+    //Method ensures that the user can't enter a date that is before today's date when adding a new Delivery
+    public boolean checkDeliveryDate(Context context) throws ParseException {
+        boolean validDate = true;
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        Date currentDate = new Date();
+        if(dateFormat.parse(deliveryDate).before(dateFormat.parse(dateFormat.format(currentDate)))){
+            Toast.makeText(context, "Please enter a Delivery Date that is not before today's date", Toast.LENGTH_LONG).show();
+            validDate = false;
+        }
+
+        return validDate;
     }
 
     //Method fetches the Deliveries that match the search result and sends them to the displayDeliveries method

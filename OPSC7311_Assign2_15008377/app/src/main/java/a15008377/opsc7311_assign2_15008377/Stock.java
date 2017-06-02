@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import static android.content.Context.MODE_APPEND;
 
-
+@SuppressWarnings("WeakerAccess")
 public class Stock implements Serializable{
     //Declarations
     private String stockID;
@@ -108,12 +108,11 @@ public class Stock implements Serializable{
 
     //Method returns an ArrayList of all Stock items in the Stock.txt text file
     public static ArrayList<Stock> readStockItems(Context context) throws IOException {
-        BufferedReader bufferedReader = null;
         String line;
-        ArrayList<Stock> lstStock = new ArrayList<Stock>();
+        ArrayList<Stock> lstStock = new ArrayList<>();
         File file = new File(context.getFilesDir(), "Stock.txt");
         FileInputStream fileInputStream = context.openFileInput(file.getName());
-        bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 
         //Loops through the file and instantiate a Stock object for each line, and adding that Stock object to the lstStock ArrayList
         while((line = bufferedReader.readLine()) != null){

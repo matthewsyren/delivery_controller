@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,11 @@ public class ClientReportListViewAdapter extends ArrayAdapter{
         btnDeleteClient = (ImageButton) convertView.findViewById(R.id.button_delete_client);
 
         //Displays the data in the appropriate Views
-        txtClientID.setText("ID: " + lstClients.get(position).getClientID());
-        txtClientName.setText("Name: " + lstClients.get(position).getClientName());
-        txtClientEmail.setText("Email: " + lstClients.get(position).getClientEmail());
-        txtClientAddress.setText("Address: " + lstClients.get(position).getClientAddress());
+        Resources resources = context.getResources();
+        txtClientID.setText(resources.getString(R.string.client_id,  lstClients.get(position).getClientID()));
+        txtClientName.setText(resources.getString(R.string.client_name,  lstClients.get(position).getClientName()));
+        txtClientEmail.setText(resources.getString(R.string.client_email,  lstClients.get(position).getClientEmail()));
+        txtClientAddress.setText(resources.getString(R.string.client_address,  lstClients.get(position).getClientAddress()));
 
         //Sets OnClickListener for the button_delete_client Button
         btnDeleteClient.setOnClickListener(new View.OnClickListener() {

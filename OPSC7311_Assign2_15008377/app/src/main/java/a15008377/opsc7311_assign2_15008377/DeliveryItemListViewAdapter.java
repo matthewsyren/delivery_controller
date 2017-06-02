@@ -10,6 +10,7 @@ package a15008377.opsc7311_assign2_15008377;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-
+@SuppressWarnings("WeakerAccess")
 public class DeliveryItemListViewAdapter extends ArrayAdapter{
     //Declarations
     private Context context;
@@ -89,8 +90,9 @@ public class DeliveryItemListViewAdapter extends ArrayAdapter{
         });
 
         //Displays the data in the appropriate Views
-        txtDeliveryItemID.setText("ID: " + lstDeliveryItems.get(position).getDeliveryStockID());
-        txtDeliveryItemQuantity.setText("Quantity: " + lstDeliveryItems.get(position).getDeliveryItemQuantity());
+        Resources resources = context.getResources();
+        txtDeliveryItemID.setText(resources.getString(R.string.delivery_item__id,  lstDeliveryItems.get(position).getDeliveryStockID()));
+        txtDeliveryItemQuantity.setText(resources.getString(R.string.delivery_item_quantity,  lstDeliveryItems.get(position).getDeliveryItemQuantity()));
 
         return convertView;
     }

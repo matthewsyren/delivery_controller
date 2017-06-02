@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class DeliveryReportListViewAdapter extends ArrayAdapter {
     //Declarations
     Context context;
@@ -36,7 +39,7 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
 
     //Method populates the appropriate Views with the appropriate data (stored in the shows ArrayList)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent)
     {
         //View declarations
         TextView txtDeliveryID;
@@ -61,10 +64,11 @@ public class DeliveryReportListViewAdapter extends ArrayAdapter {
         btnMarkDeliveryAsComplete = (Button) convertView.findViewById(R.id.button_mark_delivery_as_complete);
 
         //Displays the data in the appropriate Views
-        txtDeliveryID.setText("Delivery ID: " + lstDeliveries.get(position).getDeliveryID());
-        txtDeliveryClientID.setText("Client ID: " + lstDeliveries.get(position).getDeliveryClientID());
-        txtDeliveryDate.setText("Delivery Date: " + lstDeliveries.get(position).getDeliveryDate());
-        txtDeliveryComplete.setText("Delivery Complete: " + (lstDeliveries.get(position).getDeliveryComplete() == 0 ? "No" : "Yes") + "\n\n");
+        Resources resources = context.getResources();
+        txtDeliveryID.setText(resources.getString(R.string.delivery_id, lstDeliveries.get(position).getDeliveryID()));
+        txtDeliveryClientID.setText(resources.getString(R.string.delivery_client_id, lstDeliveries.get(position).getDeliveryClientID()));
+        txtDeliveryDate.setText(resources.getString(R.string.delivery_date, lstDeliveries.get(position).getDeliveryDate()));
+        txtDeliveryComplete.setText(resources.getString(R.string.delivery_complete, (lstDeliveries.get(position).getDeliveryComplete() == 0 ? "No" : "Yes") + "\n\n"));
 
         //Loops through all Delivery Items for the Delivery and displays them
         final ArrayList<DeliveryItem> lstDeliveryItems = lstDeliveries.get(position).getLstDeliveryItems();

@@ -17,7 +17,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import java.util.ArrayList;
 
-
+@SuppressWarnings("WeakerAccess")
 public class DBAdapter {
     //Database declarations
     private static final String DATABASE_NAME = "Deliveries.db";
@@ -49,13 +49,11 @@ public class DBAdapter {
     private static final String DATABASE_DELIVERY_ITEM_CREATE = "create table " + DATABASE_DELIVERY_ITEM_TABLE + " (" + KEY_ROWID + " integer primary key autoincrement, " + KEY_DELIVERY_ID + " text not null, " + KEY_DELIVERY_ITEM_ID + " text not null, " + KEY_DELIVERY_ITEM_QUANTITY + " int not null);";
 
     //Other Declarations
-    private Context context;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase sqLiteDatabase;
 
     //Constructor
     public DBAdapter(Context context) {
-        this.context = context;
         dbHelper = new DatabaseHelper(context);
     }
 
@@ -142,7 +140,7 @@ public class DBAdapter {
         else{
             client = null;
         }
-
+        cursor.close();
         return client;
     }
 
@@ -190,14 +188,12 @@ public class DBAdapter {
 
     //Method retrieves a specific record from the appropriate database
     public Cursor getDelivery(String deliveryID) {
-        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
-        return cursor;
+        return sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
     }
 
     //Method retrieves a specific record from the appropriate database
     public Cursor searchDelivery(String searchTerm)  {
-        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + " LIKE '%" + searchTerm + "%'", null, null, null, null, null);
-        return cursor;
+        return sqLiteDatabase.query(true, DATABASE_DELIVERY_TABLE, new String[] {KEY_DELIVERY_ID, KEY_DELIVERY_CLIENT_ID, KEY_DELIVERY_DATE, KEY_DELIVERY_COMPLETED}, KEY_DELIVERY_ID + " LIKE '%" + searchTerm + "%'", null, null, null, null, null);
     }
 
     //Method updates a specific record in the appropriate table
@@ -230,14 +226,12 @@ public class DBAdapter {
 
     //Method retrieves a specific record from the appropriate database
     public Cursor getDeliveryItems(String deliveryID)  {
-        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
-        return cursor;
+        return sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "'", null, null, null, null, null);
     }
 
     //Method retrieves a specific record from the appropriate database
     public Cursor getDeliveryItem(String deliveryID, String stockID)  {
-        Cursor cursor = sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "' AND " + KEY_DELIVERY_ITEM_ID + "='" + stockID + "'", null, null, null, null, null);
-        return cursor;
+        return sqLiteDatabase.query(true, DATABASE_DELIVERY_ITEM_TABLE, new String[] {KEY_DELIVERY_ITEM_ID, KEY_DELIVERY_ITEM_QUANTITY}, KEY_DELIVERY_ID + "='" + deliveryID + "' AND " + KEY_DELIVERY_ITEM_ID + "='" + stockID + "'", null, null, null, null, null);
     }
 
     //Method deletes all DeliveryItems associated with a Delivery

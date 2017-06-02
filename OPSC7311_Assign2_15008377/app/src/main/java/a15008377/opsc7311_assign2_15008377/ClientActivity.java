@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import org.json.JSONObject;
-import java.io.IOException;
 
 public class ClientActivity extends AppCompatActivity implements IAPIConnectionResponse{
     //Declarations
@@ -73,16 +73,19 @@ public class ClientActivity extends AppCompatActivity implements IAPIConnectionR
             if(action.equals("update")){
                 EditText txtClientID = (EditText) findViewById(R.id.text_client_id);
                 txtClientID.setEnabled(false);
-                button.setText("Update Client");
+                button.setText(R.string.button_update_client);
                 Client client = (Client) bundle.getSerializable("clientObject");
                 displayData(client);
             }
             else if(action.equals("add")){
-                button.setText("Add Client");
+                button.setText(R.string.button_add_client);
             }
 
             //Displays Back button in ActionBar
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null){
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
