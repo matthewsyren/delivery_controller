@@ -10,6 +10,7 @@ package a15008377.opsc7311_assign2_15008377;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class StockActivity extends AppCompatActivity {
     String action;
@@ -68,16 +69,20 @@ public class StockActivity extends AppCompatActivity {
             if(action.equals("update")){
                 EditText txtStockID = (EditText) findViewById(R.id.text_stock_id);
                 txtStockID.setEnabled(false);
-                button.setText("Update Stock");
+                button.setText(R.string.button_update_stock);
+
                 Stock stock = (Stock) bundle.getSerializable("stockObject");
                 displayData(stock);
             }
             else if(action.equals("add")){
-                button.setText("Add Stock");
+                button.setText(R.string.button_add_stock);
             }
 
             //Displays Back button in ActionBar
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null){
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
@@ -94,7 +99,7 @@ public class StockActivity extends AppCompatActivity {
             //Displays the Stock item's data in the appropriate Views
             txtStockID.setText(stock.getStockID());
             txtStockDescription.setText(stock.getStockDescription());
-            txtStockQuantity.setText(stock.getStockQuantity() + "");
+            txtStockQuantity.setText(String.format(Locale.ENGLISH, "%d", stock.getStockQuantity()));
         }
         catch(Exception exc){
             Toast.makeText(getApplicationContext(), exc.getMessage(), Toast.LENGTH_LONG).show();
